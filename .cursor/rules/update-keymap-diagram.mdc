@@ -1,0 +1,15 @@
+---
+description: Keep the Iris keymap diagram in sync when binds or layers change
+globs: keyboards/keebio/iris_lm/keymaps/steno_qwerty/**/*,diagrams/iris_lm_steno_qwerty.md
+alwaysApply: false
+---
+
+# Update keymap diagram
+
+When you change layers, keybinds, combos, RGB indicators, or mode-toggle behavior in `keyboards/keebio/iris_lm/keymaps/steno_qwerty/`, also update:
+
+`diagrams/iris_lm_steno_qwerty.md`
+
+That file is the human-readable layout reference (Base, Lower, Raise, Steno, RGB notes, quick reference). Keep it accurate to the firmware — same labels, blanks for `_______`, and notes for non-obvious behavior (Word Mod, Shift+brackets, steno toggle chord, orange LED indicators).
+
+Do this in the same change set as the keymap edit; do not leave the diagram stale.

@@ -14,6 +14,11 @@ enum custom_layers {
     _STENO,
 };
 
+enum custom_keycodes {
+    // Lower+Space: Opt on Mac/iOS, Ctrl elsewhere — word-nav with arrows.
+    WORD_MOD = SAFE_RANGE,
+};
+
 enum combos {
     // Same physical chord; two keycode sets for QWERTY vs STENO layers.
     COMBO_STENO_TOGGLE_QWERTY,
@@ -59,14 +64,40 @@ static uint32_t deferred_bootloader_jump(uint32_t trigger_time, void *cb_arg) {
     return 0;
 }
 
+// Mac/iOS: Opt+←/→ = word. Windows/Linux: Ctrl+←/→ = word.
+// OS_UNSURE defaults to Opt (this userspace is Mac-first).
+static uint8_t word_nav_mod(void) {
+    switch (detected_host_os()) {
+        case OS_WINDOWS:
+        case OS_LINUX:
+            return KC_LCTL;
+        default:
+            return KC_LALT;
+    }
+}
+
+static uint8_t word_mod_held = 0;
+
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
-    if (record->event.pressed && keycode == QK_BOOT) {
-        clear_keyboard();
+    switch (keycode) {
+        case WORD_MOD:
+            if (record->event.pressed) {
+                word_mod_held = word_nav_mod();
+                register_code(word_mod_held);
+            } else {
+                unregister_code(word_mod_held);
+                word_mod_held = 0;
+            }
+            return false;
+        case QK_BOOT:
+            if (record->event.pressed) {
+                clear_keyboard();
 #ifdef RGB_MATRIX_ENABLE
-        rgb_matrix_set_suspend_state(true);
+                rgb_matrix_set_suspend_state(true);
 #endif
-        defer_exec(500, deferred_bootloader_jump, NULL);
-        return false;
+                defer_exec(500, deferred_bootloader_jump, NULL);
+            }
+            return false;
     }
     return true;
 }
@@ -99,15 +130,18 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
     [_LOWER] = LAYOUT(
     //┌────────┬────────┬────────┬────────┬────────┬────────┐                          ┌────────┬────────┬────────┬────────┬────────┬────────┐
-       KC_TILD, KC_EXLM, KC_AT,   KC_HASH, KC_DLR,  KC_PERC,                            KC_CIRC, KC_AMPR, KC_ASTR, KC_LPRN, KC_RPRN, KC_PGUP,
+    //                                                                         [ ] — Shift held → { }
+       KC_TILD, KC_EXLM, KC_AT,   KC_HASH, KC_DLR,  KC_PERC,                            KC_CIRC, KC_AMPR, KC_ASTR, KC_LBRC, KC_RBRC, KC_PGUP,
     //├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤
        KC_GRV,  _______, KC_UP,   _______, QK_BOOT, _______,                            _______, KC_P7,   KC_P8,   KC_P9,   KC_P0,   KC_PGDN,
     //├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤
-       KC_DEL,  KC_LEFT, KC_DOWN, KC_RGHT, _______, KC_LBRC,                            KC_RBRC, KC_P4,   KC_P5,   KC_P6,   KC_PLUS, KC_PIPE,
+    //         Ctrl + ←↓→ on ASD; vim hjkl arrows on right home row
+       KC_LCTL, KC_LEFT, KC_DOWN, KC_RGHT, _______, KC_LBRC,                            KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT, KC_PLUS, KC_PIPE,
     //├────────┼────────┼────────┼────────┼────────┼────────┼────────┐        ┌────────┼────────┼────────┼────────┼────────┼────────┼────────┤
-       RM_NEXT, EE_CLR,  _______, _______, _______, KC_LCBR, KC_LPRN,          KC_RPRN, KC_RCBR, KC_P1,   KC_P2,   KC_P3,   KC_MINS, _______,
+       KC_LSFT, EE_CLR,  _______, _______, _______, KC_LCBR, KC_LPRN,          KC_RPRN, KC_RCBR, KC_P1,   KC_P2,   KC_P3,   KC_MINS, _______,
     //└────────┴────────┴────────┴───┬────┴───┬────┴───┬────┴───┬────┘        └───┬────┴───┬────┴───┬────┴───┬────┴────────┴────────┴────────┘
-                                      _______, _______, KC_DEL,                    KC_DEL,  _______, KC_P0
+    //                                                               Space → WORD_MOD (Opt/Ctrl by OS)
+                                      _______, _______, _______,                   WORD_MOD, _______, KC_P0
                                   // └────────┴────────┴────────┘                 └────────┴────────┴────────┘
     ),
 

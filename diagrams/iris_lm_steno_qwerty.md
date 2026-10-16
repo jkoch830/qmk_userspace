@@ -3,7 +3,7 @@
 Visual reference for the current binds. Blank cells are transparent (`_______`) and fall through to the layer below.
 
 **Modes:** QWERTY (default) ↔ Steno via chord **Cmd + A + S + D + F**.  
-**RGB:** Backspace LED orange = QWERTY; Backspace + `0` LEDs orange = Steno. All other LEDs stay off.
+**RGB:** Backspace LED orange = QWERTY; Backspace + `0` LEDs orange = Steno. **Upper + Tab** toggles indicators fully off/on.
 
 ---
 
@@ -68,7 +68,8 @@ Visual reference for the current binds. Blank cells are transparent (`_______`) 
 ┌──────┬──────┬──────┬──────┬──────┬──────┐                    ┌──────┬──────┬──────┬──────┬──────┬──────┐
 │ F12  │  F1  │  F2  │  F3  │  F4  │  F5  │                    │  F6  │  F7  │  F8  │  F9  │ F10  │ F11  │
 ├──────┼──────┼──────┼──────┼──────┼──────┤                    ├──────┼──────┼──────┼──────┼──────┼──────┤
-│      │  !   │  @   │  #   │  $   │  %   │                    │  ^   │  &amp;   │  *   │  (   │  )   │ Boot │
+│ RGB  │  !   │  @   │  #   │  $   │  %   │                    │  ^   │  &amp;   │  *   │  (   │  )   │ Boot │
+│Toggle│      │      │      │      │      │                    │      │      │      │      │      │      │
 ├──────┼──────┼──────┼──────┼──────┼──────┤                    ├──────┼──────┼──────┼──────┼──────┼──────┤
 │      │ Prev │ Next │ Vol+ │ PgUp │  _   │                    │  =   │ Home │      │      │      │  \   │
 │      │Track │Track │      │      │      │                    │      │      │      │      │      │      │
@@ -79,8 +80,7 @@ Visual reference for the current binds. Blank cells are transparent (`_______`) 
                          │      │      │      │            │      │ Fn2  │      │
                          └──────┴──────┴──────┘            └──────┴──────┴──────┘
 
-
-RGB mode / hue / sat / val keys removed — lighting is indicators-only.
+RGB Toggle = Upper+Tab (indicators fully off/on). Other RGB animation keys removed.
 </pre>
 
 </div>
@@ -97,11 +97,13 @@ Toggle: hold **Cmd + A + S + D + F** together (works from QWERTY or Steno).
 
 <pre style="margin:0;white-space:pre">
 ┌──────┬──────┬──────┬──────┬──────┬──────┐                    ┌──────┬──────┬──────┬──────┬──────┬──────┐
-│ Esc  │  1   │  2   │  3   │  4   │  5   │                    │  6   │  7   │  8   │  9   │  0   │ Bksp │ ← both LEDs orange
-│  ~   │      │      │      │      │      │                    │      │      │      │      │      │      │
+│ Esc  │  1   │  2   │  3   │  4   │  5   │                    │  6   │  7   │  8   │  9   │  0   │Bksp* │ ← both LEDs orange
+│  ~   │      │      │      │      │      │                    │      │      │      │Shift │Shift │PW-FP │
+│      │      │      │      │      │      │                    │      │      │      │PREPB │PR*EPB│      │
+│      │      │      │      │      │      │                    │      │      │      │  (   │  )   │      │
 ├──────┼──────┼──────┼──────┼──────┼──────┤                    ├──────┼──────┼──────┼──────┼──────┼──────┤
-│ Tab  │  #   │  T-  │  P-  │  H-  │  *1  │                    │  *3  │  -F  │  -P  │  -L  │  -T  │  -D  │
-│      │ (S1) │      │      │      │      │                    │      │      │      │      │      │      │
+│Tab*  │  #   │  T-  │  P-  │  H-  │  *1  │                    │  *3  │  -F  │  -P  │  -L  │  -T  │  -D  │
+│TA*B  │ (S1) │      │      │      │      │                    │      │      │      │      │      │      │
 ├──────┼──────┼──────┼──────┼──────┼──────┤                    ├──────┼──────┼──────┼──────┼──────┼──────┤
 │ Ctrl │  S   │  K-  │  W-  │  R-  │  *2  │                    │  *4  │  -R  │  -B  │  -G  │  -S  │  -Z  │
 │      │ (S2) │      │      │      │      │                    │      │      │      │      │      │      │
@@ -111,7 +113,8 @@ Toggle: hold **Cmd + A + S + D + F** together (works from QWERTY or Steno).
                          │ Cmd  │  A   │  O   │            │  E   │  U   │ Alt  │
                          └──────┴──────┴──────┘            └──────┴──────┴──────┘
 
-Unlabeled letter keys (Z X C V B / N M , . / and number row) stay normal QWERTY.
+*Tab / Bksp / Shift+9 / Shift+0 send Lapwing GeminiPR strokes (not HID keys) so Plover spacing works.
+Unshifted 9/0 still type digits. Other letter keys (Z X C V B / N M , . /) stay QWERTY.
 # is Gemini S1 — Plover Lapwing usually remaps S1 → #.
 </pre>
 
@@ -128,6 +131,9 @@ Unlabeled letter keys (Z X C V B / N M , . / and number row) stay normal QWERTY.
 | Word-move (Mac/Win) | **Lower + Space + ←/→** (or hjkl arrows) |
 | `[` `]` then `{` `}` | **Lower + 9/0**; add **Shift** for braces |
 | Vim arrows | **Lower + h j k l** |
+| Toggle RGB indicators | **Upper + Tab** |
+| Steno `(` / `)` | **Shift+9** / **Shift+0** → PREPB / PR\*EPB |
+| Steno Backspace / Tab | **Bksp** / **Tab** → PW-FP / TA\*B |
 | Bootloader | **Lower + R** (left) or **Raise + Del** (right) |
 | Clear EEPROM | **Lower + Z** or **Raise + RShift** |
 | Toggle Steno ↔ QWERTY | **Cmd + A + S + D + F** |

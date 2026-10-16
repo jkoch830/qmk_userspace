@@ -17,6 +17,11 @@ enum custom_layers {
 enum custom_keycodes {
     // Lower+Space: Opt on Mac/iOS, Ctrl elsewhere — word-nav with arrows.
     WORD_MOD = SAFE_RANGE,
+    // Steno-mode keys that emit Lapwing strokes (spacing/attach via Plover).
+    ST_LPRN, // 9, or Shift+9 → PREPB  (
+    ST_RPRN, // 0, or Shift+0 → PR*EPB )
+    ST_BSPC, // PW-FP  backspace
+    ST_TAB,  // TA*B   tab
 };
 
 enum combos {
@@ -78,6 +83,25 @@ static uint8_t word_nav_mod(void) {
 
 static uint8_t word_mod_held = 0;
 
+// Build/send a GeminiPR packet without touching the live chord state
+// (send_custom_steno_chord is not in this QMK tree yet).
+extern void steno_add_key_to_chord_gemini(uint8_t chord[MAX_STROKE_SIZE], uint8_t key);
+extern void steno_send_chord_gemini(uint8_t chord[MAX_STROKE_SIZE]);
+
+static void send_gemini_stroke(const uint16_t *keys, uint8_t n) {
+    uint8_t chord[MAX_STROKE_SIZE] = {0};
+    for (uint8_t i = 0; i < n; i++) {
+        steno_add_key_to_chord_gemini(chord, keys[i] - QK_STENO_FUNCTION);
+    }
+    steno_send_chord_gemini(chord);
+}
+
+// Lapwing outlines (see lapwing-base / commands dictionaries).
+static const uint16_t stroke_lprn[] = {STN_PL, STN_RL, STN_E, STN_PR, STN_BR};                   // PREPB
+static const uint16_t stroke_rprn[] = {STN_PL, STN_RL, STN_ST1, STN_E, STN_PR, STN_BR};         // PR*EPB
+static const uint16_t stroke_bspc[] = {STN_PL, STN_WL, STN_FR, STN_PR};                         // PW-FP
+static const uint16_t stroke_tab[]  = {STN_TL, STN_A, STN_ST1, STN_BR};                         // TA*B
+
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
         case WORD_MOD:
@@ -87,6 +111,34 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             } else {
                 unregister_code(word_mod_held);
                 word_mod_held = 0;
+            }
+            return false;
+        case ST_LPRN:
+            if (record->event.pressed) {
+                if ((get_mods() | get_oneshot_mods()) & MOD_MASK_SHIFT) {
+                    send_gemini_stroke(stroke_lprn, ARRAY_SIZE(stroke_lprn));
+                } else {
+                    tap_code(KC_9);
+                }
+            }
+            return false;
+        case ST_RPRN:
+            if (record->event.pressed) {
+                if ((get_mods() | get_oneshot_mods()) & MOD_MASK_SHIFT) {
+                    send_gemini_stroke(stroke_rprn, ARRAY_SIZE(stroke_rprn));
+                } else {
+                    tap_code(KC_0);
+                }
+            }
+            return false;
+        case ST_BSPC:
+            if (record->event.pressed) {
+                send_gemini_stroke(stroke_bspc, ARRAY_SIZE(stroke_bspc));
+            }
+            return false;
+        case ST_TAB:
+            if (record->event.pressed) {
+                send_gemini_stroke(stroke_tab, ARRAY_SIZE(stroke_tab));
             }
             return false;
         case QK_BOOT:
@@ -123,6 +175,10 @@ void keyboard_post_init_user(void) {
 // Steno: Backspace + key to its left (0) orange.
 // Other LEDs forced dark each frame so leftover effects can't bleed through.
 bool rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
+    // Honor RM_TOGG: when the matrix is disabled, leave LEDs fully off.
+    if (!rgb_matrix_is_enabled()) {
+        return false;
+    }
     for (uint8_t i = led_min; i < led_max; i++) {
         rgb_matrix_set_color(i, RGB_OFF);
     }
@@ -179,8 +235,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     //┌────────┬────────┬────────┬────────┬────────┬────────┐                          ┌────────┬────────┬────────┬────────┬────────┬────────┐
        KC_F12,  KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,                              KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,
     //├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤
-    // RGB toggle/mode/hue keys removed — indicators-only lighting
-       _______, KC_EXLM, KC_AT,   KC_HASH, KC_DLR,  KC_PERC,                            KC_CIRC, KC_AMPR, KC_ASTR, KC_LPRN, KC_RPRN, QK_BOOT,
+    // Upper+Tab = RGB toggle (indicators on/off); other RGB keys removed
+       RM_TOGG, KC_EXLM, KC_AT,   KC_HASH, KC_DLR,  KC_PERC,                            KC_CIRC, KC_AMPR, KC_ASTR, KC_LPRN, KC_RPRN, QK_BOOT,
     //├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤
        _______, KC_MPRV, KC_MNXT, KC_VOLU, KC_PGUP, KC_UNDS,                            KC_EQL,  KC_HOME, _______, _______, _______, KC_BSLS,
     //├────────┼────────┼────────┼────────┼────────┼────────┼────────┐        ┌────────┼────────┼────────┼────────┼────────┼────────┼────────┤
@@ -203,10 +259,12 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
      */
     [_STENO] = LAYOUT(
     //┌────────┬────────┬────────┬────────┬────────┬────────┐                          ┌────────┬────────┬────────┬────────┬────────┬────────┐
-       QK_GESC, KC_1,    KC_2,    KC_3,    KC_4,    KC_5,                               KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_BSPC,
+    //                                                  Shift+9 → PREPB (  Shift+0 → PR*EPB )   Bksp → PW-FP
+       QK_GESC, KC_1,    KC_2,    KC_3,    KC_4,    KC_5,                               KC_6,    KC_7,    KC_8,    ST_LPRN, ST_RPRN, ST_BSPC,
     //├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤
+    // Tab → TA*B
     //         # (S1)   T-       P-       H-       *1       *3       -F       -P       -L       -T       -D
-       KC_TAB,  STN_S1,  STN_TL,  STN_PL,  STN_HL,  STN_ST1,                            STN_ST3, STN_FR,  STN_PR,  STN_LR,  STN_TR,  STN_DR,
+       ST_TAB,  STN_S1,  STN_TL,  STN_PL,  STN_HL,  STN_ST1,                            STN_ST3, STN_FR,  STN_PR,  STN_LR,  STN_TR,  STN_DR,
     //├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤
     //         S (S2)   K-       W-       R-       *2       *4       -R       -B       -G       -S       -Z
        KC_LCTL, STN_S2,  STN_KL,  STN_WL,  STN_RL,  STN_ST2,                            STN_ST4, STN_RR,  STN_BR,  STN_GR,  STN_SR,  STN_ZR,

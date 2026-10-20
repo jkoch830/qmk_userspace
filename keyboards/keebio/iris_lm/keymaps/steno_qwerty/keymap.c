@@ -1,33 +1,38 @@
 // Copyright 2023 Danny Nguyen (@nooges)
 // SPDX-License-Identifier: GPL-2.0-or-later
 //
-// Iris LM: QWERTY-first with a toggled Lapwing/steno layer.
-// Toggle: chord Left GUI (Cmd) + A + S + D + F simultaneously.
+// Iris LM: QWERTY-first with toggled Lapwing/steno and Game modes.
+// Steno toggle: chord Left GUI (Cmd) + A + S + D + F simultaneously.
+// Game toggle:  chord Left GUI (Cmd) + Q + W + E + R simultaneously.
 // Steno keys speak GeminiPR to Plover; unlisted keys stay QWERTY.
+// Game mode is QWERTY with Space/Lower/Upper/Enter thumb order.
 
 #include QMK_KEYBOARD_H
 
 enum custom_layers {
+    // Base modes must sit below Lower/Raise so momentary overlays win.
     _QWERTY = 0,
+    _STENO,
+    _GAME,
     _LOWER,
     _RAISE,
-    _STENO,
+    _ADJUST,
 };
 
 enum custom_keycodes {
-    // Lower+Space: Opt on Mac/iOS, Ctrl elsewhere — word-nav with arrows.
-    WORD_MOD = SAFE_RANGE,
     // Steno-mode keys that emit Lapwing strokes (spacing/attach via Plover).
-    ST_LPRN, // 9, or Shift+9 → PREPB  (
-    ST_RPRN, // 0, or Shift+0 → PR*EPB )
-    ST_BSPC, // PW-FP  backspace
-    ST_TAB,  // TA*B   tab
+    ST_LPRN = SAFE_RANGE, // 9, or Shift+9 → PREPB  (
+    ST_RPRN,               // 0, or Shift+0 → PR*EPB )
+    ST_BSPC,               // PW-FP  backspace
+    ST_TAB,                // TA*B   tab
 };
 
 enum combos {
-    // Same physical chord; two keycode sets for QWERTY vs STENO layers.
+    // Same physical chords; keycode variants per active base layer.
     COMBO_STENO_TOGGLE_QWERTY,
     COMBO_STENO_TOGGLE_STENO,
+    COMBO_GAME_TOGGLE_QWERTY,
+    COMBO_GAME_TOGGLE_STENO,
 };
 
 const uint16_t PROGMEM steno_toggle_qwerty[] = {KC_LGUI, KC_A, KC_S, KC_D, KC_F, COMBO_END};
@@ -35,11 +40,36 @@ const uint16_t PROGMEM steno_toggle_qwerty[] = {KC_LGUI, KC_A, KC_S, KC_D, KC_F,
 // Exit while STN_* keycodes are active (Lapwing: A=S2, S=K, D=W, F=R).
 const uint16_t PROGMEM steno_toggle_steno[] = {KC_LGUI, STN_S2, STN_KL, STN_WL, STN_RL, COMBO_END};
 
+// Game chord works on QWERTY and Game (same letter keycodes).
+const uint16_t PROGMEM game_toggle_qwerty[] = {KC_LGUI, KC_Q, KC_W, KC_E, KC_R, COMBO_END};
+
+// From Steno: Q=#/S1, W=T-, E=P-, R=H- (all STN_* — mixed HID+STN combos are unreliable).
+const uint16_t PROGMEM game_toggle_steno[] = {KC_LGUI, STN_S1, STN_TL, STN_PL, STN_HL, COMBO_END};
+
 combo_t key_combos[] = {
     [COMBO_STENO_TOGGLE_QWERTY] = COMBO_ACTION(steno_toggle_qwerty),
     [COMBO_STENO_TOGGLE_STENO]  = COMBO_ACTION(steno_toggle_steno),
+    [COMBO_GAME_TOGGLE_QWERTY]  = COMBO_ACTION(game_toggle_qwerty),
+    [COMBO_GAME_TOGGLE_STENO]   = COMBO_ACTION(game_toggle_steno),
 };
 
+// Only the keycode set that matches the current base may fire. Steno keys never
+// match the QWERTY combos and vice versa; gating avoids cross-talk.
+bool combo_should_trigger(uint16_t combo_index, combo_t *combo, uint16_t keycode, keyrecord_t *record) {
+    const bool in_steno = layer_state_cmp(default_layer_state, _STENO);
+    switch (combo_index) {
+        case COMBO_STENO_TOGGLE_STENO:
+        case COMBO_GAME_TOGGLE_STENO:
+            return in_steno;
+        case COMBO_STENO_TOGGLE_QWERTY:
+        case COMBO_GAME_TOGGLE_QWERTY:
+            return !in_steno;
+    }
+    return true;
+}
+
+// Each mode chord toggles that mode ↔ QWERTY. Crossing modes (e.g. Game→Steno)
+// is just "not in target → enter target" on the destination chord.
 static void toggle_steno_mode(void) {
     if (layer_state_cmp(default_layer_state, _STENO)) {
         default_layer_set((layer_state_t)1 << _QWERTY);
@@ -47,6 +77,16 @@ static void toggle_steno_mode(void) {
     } else {
         default_layer_set((layer_state_t)1 << _STENO);
         layer_move(_STENO);
+    }
+}
+
+static void toggle_game_mode(void) {
+    if (layer_state_cmp(default_layer_state, _GAME)) {
+        default_layer_set((layer_state_t)1 << _QWERTY);
+        layer_move(_QWERTY);
+    } else {
+        default_layer_set((layer_state_t)1 << _GAME);
+        layer_move(_GAME);
     }
 }
 
@@ -58,6 +98,10 @@ void process_combo_event(uint16_t combo_index, bool pressed) {
         case COMBO_STENO_TOGGLE_QWERTY:
         case COMBO_STENO_TOGGLE_STENO:
             toggle_steno_mode();
+            break;
+        case COMBO_GAME_TOGGLE_QWERTY:
+        case COMBO_GAME_TOGGLE_STENO:
+            toggle_game_mode();
             break;
     }
 }
@@ -104,15 +148,20 @@ static const uint16_t stroke_tab[]  = {STN_TL, STN_A, STN_ST1, STN_BR};         
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
-        case WORD_MOD:
-            if (record->event.pressed) {
-                word_mod_held = word_nav_mod();
-                register_code(word_mod_held);
-            } else {
-                unregister_code(word_mod_held);
-                word_mod_held = 0;
+        // Lower + Space → word-nav mod (Opt/Ctrl). Space is read from the active
+        // base layer, so this follows Game's remapped thumbs automatically.
+        case KC_SPC:
+            if (IS_LAYER_ON(_LOWER)) {
+                if (record->event.pressed) {
+                    word_mod_held = word_nav_mod();
+                    register_code(word_mod_held);
+                } else {
+                    unregister_code(word_mod_held);
+                    word_mod_held = 0;
+                }
+                return false;
             }
-            return false;
+            break;
         case ST_LPRN:
             if (record->event.pressed) {
                 if ((get_mods() | get_oneshot_mods()) & MOD_MASK_SHIFT) {
@@ -173,6 +222,7 @@ void keyboard_post_init_user(void) {
 #ifdef RGB_MATRIX_ENABLE
 // QWERTY: top-right (Backspace) orange.
 // Steno: Backspace + key to its left (0) orange.
+// Game:  Backspace + 0 + 9 (three top-right) orange.
 // Other LEDs forced dark each frame so leftover effects can't bleed through.
 bool rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
     // Honor RM_TOGG: when the matrix is disabled, leave LEDs fully off.
@@ -185,13 +235,18 @@ bool rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
 
     const uint8_t led_bspc = g_led_config.matrix_co[5][0];
     const uint8_t led_zero = g_led_config.matrix_co[5][1];
+    const uint8_t led_nine = g_led_config.matrix_co[5][2];
     const bool    steno    = layer_state_cmp(default_layer_state, _STENO);
+    const bool    game     = layer_state_cmp(default_layer_state, _GAME);
 
     if (led_bspc != NO_LED && led_bspc >= led_min && led_bspc < led_max) {
         rgb_matrix_set_color(led_bspc, RGB_ORANGE);
     }
-    if (steno && led_zero != NO_LED && led_zero >= led_min && led_zero < led_max) {
+    if ((steno || game) && led_zero != NO_LED && led_zero >= led_min && led_zero < led_max) {
         rgb_matrix_set_color(led_zero, RGB_ORANGE);
+    }
+    if (game && led_nine != NO_LED && led_nine >= led_min && led_nine < led_max) {
+        rgb_matrix_set_color(led_nine, RGB_ORANGE);
     }
     return false;
 }
@@ -211,38 +266,6 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
        KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_HOME,          KC_END,  KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_RSFT,
     //└────────┴────────┴────────┴───┬────┴───┬────┴───┬────┴───┬────┘        └───┬────┴───┬────┴───┬────┴───┬────┴────────┴────────┴────────┘
                                       KC_LGUI, TL_LOWR, KC_ENT,                    KC_SPC,  TL_UPPR, KC_RALT
-                                  // └────────┴────────┴────────┘                 └────────┴────────┴────────┘
-    ),
-
-    [_LOWER] = LAYOUT(
-    //┌────────┬────────┬────────┬────────┬────────┬────────┐                          ┌────────┬────────┬────────┬────────┬────────┬────────┐
-    //                                                                         [ ] — Shift held → { }
-       KC_GRV,  KC_EXLM, KC_AT,   KC_HASH, KC_DLR,  KC_PERC,                            KC_CIRC, KC_AMPR, KC_ASTR, KC_LBRC, KC_RBRC, KC_PGUP,
-    //├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤
-       KC_TILD, _______, KC_UP,   _______, QK_BOOT, _______,                            _______, KC_P7,   KC_P8,   KC_P9,   KC_P0,   KC_PGDN,
-    //├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤
-    //         Ctrl + ←↓→ on ASD; vim hjkl arrows on right home row
-       KC_LCTL, KC_LEFT, KC_DOWN, KC_RGHT, _______, KC_LBRC,                            KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT, KC_PLUS, KC_PIPE,
-    //├────────┼────────┼────────┼────────┼────────┼────────┼────────┐        ┌────────┼────────┼────────┼────────┼────────┼────────┼────────┤
-       KC_LSFT, EE_CLR,  _______, _______, _______, KC_LCBR, KC_LPRN,          KC_RPRN, KC_RCBR, KC_P1,   KC_P2,   KC_P3,   KC_MINS, KC_RSFT,
-    //└────────┴────────┴────────┴───┬────┴───┬────┴───┬────┴───┬────┘        └───┬────┴───┬────┴───┬────┴───┬────┴────────┴────────┴────────┘
-    //                                                               Space → WORD_MOD (Opt/Ctrl by OS)
-                                      _______, _______, _______,                   WORD_MOD, _______, KC_P0
-                                  // └────────┴────────┴────────┘                 └────────┴────────┴────────┘
-    ),
-
-    [_RAISE] = LAYOUT(
-    //┌────────┬────────┬────────┬────────┬────────┬────────┐                          ┌────────┬────────┬────────┬────────┬────────┬────────┐
-       KC_F12,  KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,                              KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,
-    //├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤
-    // Upper+Tab = RGB toggle (indicators on/off); other RGB keys removed
-       RM_TOGG, KC_EXLM, KC_AT,   KC_HASH, KC_DLR,  KC_PERC,                            KC_CIRC, KC_AMPR, KC_ASTR, KC_LPRN, KC_RPRN, QK_BOOT,
-    //├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤
-       _______, KC_MPRV, KC_MNXT, KC_VOLU, KC_PGUP, KC_UNDS,                            KC_EQL,  KC_HOME, _______, _______, _______, KC_BSLS,
-    //├────────┼────────┼────────┼────────┼────────┼────────┼────────┐        ┌────────┼────────┼────────┼────────┼────────┼────────┼────────┤
-       KC_MUTE, KC_MSTP, KC_MPLY, KC_VOLD, KC_PGDN, KC_MINS, KC_LPRN,          _______, KC_PLUS, KC_END,  _______, _______, _______, EE_CLR,
-    //└────────┴────────┴────────┴───┬────┴───┬────┴───┬────┴───┬────┘        └───┬────┴───┬────┴───┬────┴───┬────┴────────┴────────┴────────┘
-                                      _______, _______, _______,                   _______, _______, _______
                                   // └────────┴────────┴────────┘                 └────────┴────────┴────────┘
     ),
 
@@ -274,5 +297,63 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     //                               Cmd      A        O                          E        U        Alt
                                       KC_LGUI, STN_A,   STN_O,                     STN_E,   STN_U,   KC_RALT
                                   // └────────┴────────┴────────┘                 └────────┴────────┴────────┘
+    ),
+
+    /* GAME — QWERTY with thumbs Space, Lower, Upper, Enter */
+    [_GAME] = LAYOUT(
+    //┌────────┬────────┬────────┬────────┬────────┬────────┐                          ┌────────┬────────┬────────┬────────┬────────┬────────┐
+       QK_GESC, KC_1,    KC_2,    KC_3,    KC_4,    KC_5,                               KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_BSPC,
+    //├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤
+       KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,                               KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_DEL,
+    //├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤
+       KC_LCTL, KC_A,    KC_S,    KC_D,    KC_F,    KC_G,                               KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT,
+    //├────────┼────────┼────────┼────────┼────────┼────────┼────────┐        ┌────────┼────────┼────────┼────────┼────────┼────────┼────────┤
+       KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_HOME,          KC_END,  KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_RSFT,
+    //└────────┴────────┴────────┴───┬────┴───┬────┴───┬────┴───┬────┘        └───┬────┴───┬────┴───┬────┴───┬────┴────────┴────────┴────────┘
+    //                               Cmd      Space    Lower                      Upper    Enter    Alt
+                                      KC_LGUI, KC_SPC,  TL_LOWR,                   TL_UPPR, KC_ENT,  KC_RALT
+                                  // └────────┴────────┴────────┘                 └────────┴────────┴────────┘
+    ),
+
+    [_LOWER] = LAYOUT(
+    //┌────────┬────────┬────────┬────────┬────────┬────────┐                          ┌────────┬────────┬────────┬────────┬────────┬────────┐
+    //                                                                         [ ] — Shift held → { }
+       KC_GRV,  KC_EXLM, KC_AT,   KC_HASH, KC_DLR,  KC_PERC,                            KC_CIRC, KC_AMPR, KC_ASTR, KC_LBRC, KC_RBRC, KC_PGUP,
+    //├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤
+       KC_TILD, _______, KC_UP,   _______, QK_BOOT, _______,                            _______, KC_P7,   KC_P8,   KC_P9,   KC_P0,   KC_PGDN,
+    //├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤
+    //         Ctrl + ←↓→ on ASD; vim hjkl arrows on right home row
+       KC_LCTL, KC_LEFT, KC_DOWN, KC_RGHT, _______, KC_LBRC,                            KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT, KC_PLUS, KC_PIPE,
+    //├────────┼────────┼────────┼────────┼────────┼────────┼────────┐        ┌────────┼────────┼────────┼────────┼────────┼────────┼────────┤
+       KC_LSFT, EE_CLR,  _______, _______, _______, KC_LCBR, KC_LPRN,          KC_RPRN, KC_RCBR, KC_P1,   KC_P2,   KC_P3,   KC_MINS, KC_RSFT,
+    //└────────┴────────┴────────┴───┬────┴───┬────┴───┬────┴───┬────┘        └───┬────┴───┬────┴───┬────┴───┬────┴────────┴────────┴────────┘
+    // Space stays transparent so base-layer KC_SPC (QWERTY or Game) is seen;
+    // process_record_user turns Lower+Space into the word-nav mod.
+                                      _______, _______, _______,                   _______, _______, KC_P0
+                                  // └────────┴────────┴────────┘                 └────────┴────────┴────────┘
+    ),
+
+    [_RAISE] = LAYOUT(
+    //┌────────┬────────┬────────┬────────┬────────┬────────┐                          ┌────────┬────────┬────────┬────────┬────────┬────────┐
+       KC_F12,  KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,                              KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,
+    //├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤
+    // Upper+Tab = RGB toggle (indicators on/off); other RGB keys removed
+       RM_TOGG, KC_EXLM, KC_AT,   KC_HASH, KC_DLR,  KC_PERC,                            KC_CIRC, KC_AMPR, KC_ASTR, KC_LPRN, KC_RPRN, QK_BOOT,
+    //├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤
+       _______, KC_MPRV, KC_MNXT, KC_VOLU, KC_PGUP, KC_UNDS,                            KC_EQL,  KC_HOME, _______, _______, _______, KC_BSLS,
+    //├────────┼────────┼────────┼────────┼────────┼────────┼────────┐        ┌────────┼────────┼────────┼────────┼────────┼────────┼────────┤
+       KC_MUTE, KC_MSTP, KC_MPLY, KC_VOLD, KC_PGDN, KC_MINS, KC_LPRN,          _______, KC_PLUS, KC_END,  _______, _______, _______, EE_CLR,
+    //└────────┴────────┴────────┴───┬────┴───┬────┴───┬────┴───┬────┘        └───┬────┴───┬────┴───┬────┴───┬────┴────────┴────────┴────────┘
+                                      _______, _______, _______,                   _______, _______, _______
+                                  // └────────┴────────┴────────┘                 └────────┴────────┴────────┘
+    ),
+
+    /* Both Lower+Upper: transparent — union of Lower/Raise only. */
+    [_ADJUST] = LAYOUT(
+       _______, _______, _______, _______, _______, _______,                            _______, _______, _______, _______, _______, _______,
+       _______, _______, _______, _______, _______, _______,                            _______, _______, _______, _______, _______, _______,
+       _______, _______, _______, _______, _______, _______,                            _______, _______, _______, _______, _______, _______,
+       _______, _______, _______, _______, _______, _______, _______,          _______, _______, _______, _______, _______, _______, _______,
+                                           _______, _______, _______,                   _______, _______, _______
     )
 };

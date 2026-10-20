@@ -2,8 +2,9 @@
 
 Visual reference for the current binds. Blank cells are transparent (`_______`) and fall through to the layer below.
 
-**Modes:** QWERTY (default) ↔ Steno via chord **Cmd + A + S + D + F**.  
-**RGB:** Backspace LED orange = QWERTY; Backspace + `0` LEDs orange = Steno. **Upper + Tab** toggles indicators fully off/on.
+**Modes:** QWERTY (default) ↔ Steno via **Cmd + A + S + D + F**; ↔ Game via **Cmd + Q + W + E + R**.  
+Each chord toggles that mode ↔ QWERTY; you can also jump Game↔Steno with the destination chord.  
+**RGB:** Bksp orange = QWERTY; Bksp+`0` = Steno; Bksp+`0`+`9` = Game. **Upper + Tab** toggles indicators fully off/on.
 
 ---
 
@@ -19,7 +20,7 @@ Visual reference for the current binds. Blank cells are transparent (`_______`) 
 │ Tab  │  Q   │  W   │  E   │  R   │  T   │                    │  Y   │  U   │  I   │  O   │  P   │ Del  │
 ├──────┼──────┼──────┼──────┼──────┼──────┤                    ├──────┼──────┼──────┼──────┼──────┼──────┤
 │ Ctrl │  A   │  S   │  D   │  F   │  G   │                    │  H   │  J   │  K   │  L   │  ;   │  '   │
-├──────┼──────┼──────┼──────┼──────┼──────┼──────┐      ┌──────┼──────┼──────┼──────┼──────┼──────┼──────┤
+├──────┼──────┼──────┼──────┼──────┼──────┬──────┐      ┌──────┼──────┼──────┼──────┼──────┼──────┼──────┤
 │Shift │  Z   │  X   │  C   │  V   │  B   │ Home │      │ End  │  N   │  M   │  ,   │  .   │  /   │Shift │
 └──────┴──────┴──────┴───┬──┴───┬──┴───┬──┴───┬──┘      └──┬───┴──┬───┴──┬───┴──┬───┴──────┴──────┴──────┘
                          │ Cmd  │Lower │Enter │            │Space │Upper │ Alt  │
@@ -31,7 +32,35 @@ Visual reference for the current binds. Blank cells are transparent (`_______`) 
 
 ---
 
-## Lower — hold **Fn1** (left thumb)
+## Game mode — QWERTY thumbs remapped
+
+Same letters as QWERTY; thumbs become **Space, Lower, Upper, Enter** (was Lower, Enter, Space, Upper).
+
+Toggle: hold **Cmd + Q + W + E + R** together (works from QWERTY, Steno, or Game).
+
+<div style="background:#ffe0b2;padding:1rem 1.25rem 1.5rem;border-radius:8px;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13px;line-height:1.35;overflow-x:auto">
+
+<pre style="margin:0;white-space:pre">
+┌──────┬──────┬──────┬──────┬──────┬──────┐                    ┌──────┬──────┬──────┬──────┬──────┬──────┐
+│ Esc  │  1   │  2   │  3   │  4   │  5   │                    │  6   │  7   │  8   │  9   │  0   │ Bksp │ ← three LEDs orange
+│  ~   │  !   │  @   │  #   │  $   │  %   │                    │  ^   │  &   │  *   │  (   │  )   │      │
+├──────┼──────┼──────┼──────┼──────┼──────┤                    ├──────┼──────┼──────┼──────┼──────┼──────┤
+│ Tab  │  Q   │  W   │  E   │  R   │  T   │                    │  Y   │  U   │  I   │  O   │  P   │ Del  │
+├──────┼──────┼──────┼──────┼──────┼──────┤                    ├──────┼──────┼──────┼──────┼──────┼──────┤
+│ Ctrl │  A   │  S   │  D   │  F   │  G   │                    │  H   │  J   │  K   │  L   │  ;   │  '   │
+├──────┼──────┼──────┼──────┼──────┼──────┬──────┐      ┌──────┼──────┼──────┼──────┼──────┼──────┼──────┤
+│Shift │  Z   │  X   │  C   │  V   │  B   │ Home │      │ End  │  N   │  M   │  ,   │  .   │  /   │Shift │
+└──────┴──────┴──────┴───┬──┴───┬──┴───┬──┴───┬──┘      └──┬───┴──┬───┴──┬───┴──┬───┴──────┴──────┴──────┘
+                         │ Cmd  │Space │Lower │            │Upper │Enter │ Alt  │
+                         │      │      │ Fn1  │            │ Fn2  │      │ Opt  │
+                         └──────┴──────┴──────┘            └──────┴──────┴──────┘
+</pre>
+
+</div>
+
+---
+
+## Lower — hold **Fn1**
 
 <div style="background:#f5d0b0;padding:1rem 1.25rem 1.5rem;border-radius:8px;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13px;line-height:1.35;overflow-x:auto">
 
@@ -45,22 +74,22 @@ Visual reference for the current binds. Blank cells are transparent (`_______`) 
 ├──────┼──────┼──────┼──────┼──────┼──────┤                    ├──────┼──────┼──────┼──────┼──────┼──────┤
 │ Ctrl │  ←   │  ↓   │  →   │      │  [   │                    │  ←   │  ↓   │  ↑   │  →   │  +   │  |   │
 │      │      │      │      │      │      │                    │  h   │  j   │  k   │  l   │      │      │
-├──────┼──────┼──────┼──────┼──────┼──────┼──────┐      ┌──────┼──────┼──────┼──────┼──────┼──────┼──────┤
+├──────┼──────┼──────┼──────┼──────┼──────┬──────┐      ┌──────┼──────┼──────┼──────┼──────┼──────┼──────┤
 │Shift │EE_CLR│      │      │      │  {   │  (   │      │  )   │  }   │  P1  │  P2  │  P3  │  -   │Shift │
 └──────┴──────┴──────┴───┬──┴───┬──┴───┬──┴───┬──┘      └──┬───┴──┬───┴──┬───┴──┬───┴──────┴──────┴──────┘
-                         │      │Lower │      │            │Word  │      │  P0  │
-                         │      │ Fn1  │      │            │ Mod* │      │      │
+                         │      │      │      │            │      │      │  P0  │
                          └──────┴──────┴──────┘            └──────┴──────┴──────┘
 
-* Word Mod (Space): Opt on Mac / Ctrl on Win·Linux — chord with ←/→ (or hjkl) for word hops
-  e.g. Lower + Space Mod + h/l  →  move by word
+* Word Mod: Lower + Space on the *current* base layout (QWERTY or Game thumbs), then ←/→
+  (or hjkl). Opt on Mac / Ctrl on Win·Linux — not tied to QWERTY’s physical Space key.
+
 </pre>
 
 </div>
 
 ---
 
-## Raise — hold **Fn2** (right thumb)
+## Raise — hold **Fn2**
 
 <div style="background:#d4c4e8;padding:1rem 1.25rem 1.5rem;border-radius:8px;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13px;line-height:1.35;overflow-x:auto">
 
@@ -76,11 +105,11 @@ Visual reference for the current binds. Blank cells are transparent (`_______`) 
 ├──────┼──────┼──────┼──────┼──────┼──────┬──────┐      ┌──────┼──────┼──────┼──────┼──────┼──────┼──────┤
 │ Mute │ Stop │ Play │ Vol− │ PgDn │  -   │  (   │      │  +   │ End  │      │      │      │EE_CLR│
 └──────┴──────┴──────┴───┬──┴───┬──┴───┬──┴───┬──┘      └──┬───┴──┬───┴──┬───┴──┬───┴──────┴──────┴──────┘
-                         │      │      │      │            │      │Raise │      │
-                         │      │      │      │            │      │ Fn2  │      │
+                         │      │      │      │            │      │      │      │
                          └──────┴──────┴──────┘            └──────┴──────┴──────┘
 
 RGB Toggle = Upper+Tab (indicators fully off/on). Other RGB animation keys removed.
+On Game, Upper is the inner-right thumb (was Space).
 </pre>
 
 </div>
@@ -91,7 +120,7 @@ RGB Toggle = Upper+Tab (indicators fully off/on). Other RGB animation keys remov
 
 Default-layer swap (not a momentary layer). Same physical board; steno keys talk to Plover.
 
-Toggle: hold **Cmd + A + S + D + F** together (works from QWERTY or Steno).
+Toggle: hold **Cmd + A + S + D + F** together (works from QWERTY, Game, or Steno).
 
 <div style="background:#c8e6c9;padding:1rem 1.25rem 1.5rem;border-radius:8px;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13px;line-height:1.35;overflow-x:auto">
 
@@ -126,9 +155,9 @@ Unshifted 9/0 still type digits. Other letter keys (Z X C V B / N M , . /) stay 
 
 | Action | How |
 |--------|-----|
-| Lower symbols / nav | Hold left **Fn1** |
-| Raise F-keys / media | Hold right **Fn2** |
-| Word-move (Mac/Win) | **Lower + Space + ←/→** (or hjkl arrows) |
+| Lower symbols / nav | Hold **Fn1** (QWERTY: left of Enter; Game: right of Space) |
+| Raise F-keys / media | Hold **Fn2** (QWERTY: right of Space; Game: left of Enter) |
+| Word-move (Mac/Win) | **Lower + Space + ←/→** (or hjkl); uses each mode’s own Lower/Space thumbs |
 | `[` `]` then `{` `}` | **Lower + 9/0**; add **Shift** for braces |
 | Vim arrows | **Lower + h j k l** |
 | Toggle RGB indicators | **Upper + Tab** |
@@ -136,6 +165,7 @@ Unshifted 9/0 still type digits. Other letter keys (Z X C V B / N M , . /) stay 
 | Steno Backspace / Tab | **Bksp** / **Tab** → PW-FP / TA\*B |
 | Bootloader | **Lower + R** (left) or **Raise + Del** (right) |
 | Clear EEPROM | **Lower + Z** or **Raise + RShift** |
-| Toggle Steno ↔ QWERTY | **Cmd + A + S + D + F** |
+| Toggle Steno ↔ QWERTY | **Cmd + A + S + D + F** (also enters Steno from Game) |
+| Toggle Game ↔ QWERTY | **Cmd + Q + W + E + R** (also enters Game from Steno) |
 
-**Tri-layer note:** Holding Lower **and** Upper together briefly activates layer 3 (the Steno *keymap* slot used as QMK’s “adjust” layer). Prefer the combo above for real Steno mode.
+**Tri-layer:** Holding Lower **and** Upper together activates a transparent Adjust layer (union of Lower/Raise only).

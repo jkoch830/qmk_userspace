@@ -14,6 +14,11 @@
 // Right-half mode LEDs need default_layer_state on the slave.
 #define SPLIT_LAYER_STATE_ENABLE
 
+// Base modes are 0–2; overlays must be above them so TL_LOWR/TL_UPPR win.
+#define TRI_LAYER_LOWER_LAYER 3  // _LOWER
+#define TRI_LAYER_UPPER_LAYER 4  // _RAISE
+#define TRI_LAYER_ADJUST_LAYER 5 // _ADJUST (all transparent)
+
 // Indicators-only lighting: keep the matrix engine running (so we can paint
 // a few keys), but default to "emit nothing" — not the same as RM_TOGG off.
 #define ENABLE_RGB_MATRIX_SOLID_COLOR

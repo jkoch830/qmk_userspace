@@ -480,9 +480,9 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             }
             return false;
         case SYM_EQL:
-            // QWERTY Lower: HID =/+ . Steno Home: Emily PBLG / G.
+            // QWERTY Lower: HID =/+ . Steno Home or base M: Emily PBLG / G.
             if (record->event.pressed) {
-                if (IS_LAYER_ON(_SYM_HOME)) {
+                if (IS_LAYER_ON(_SYM_HOME) || steno_typing()) {
                     if (sym_shifted()) {
                         send_emily_symbol(emily_plus, ARRAY_SIZE(emily_plus), false);
                     } else {
@@ -561,7 +561,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             }
             return false;
         case SYM_MINS:
-            // - (H-PB); Shift → _ (Emily BG). Home+Shift+Minus = underscore.
+            // - (H-PB); Shift → _ (Emily BG). Home minus or steno base N.
             if (record->event.pressed) {
                 if (sym_shifted()) {
                     send_emily_symbol(emily_unds, ARRAY_SIZE(emily_unds), false);
@@ -691,8 +691,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     // Ctrl/Cmd/Alt → LM(_COMPUTER) so hold = QWERTY + mod (OS shortcuts).
        LM(_COMPUTER, MOD_LCTL), STN_S2, STN_KL, STN_WL, STN_RL, STN_ST2,               STN_ST4, STN_RR,  STN_BR,  STN_GR,  STN_SR,  STN_ZR,
     //├────────┼────────┼────────┼────────┼────────┼────────┼────────┐        ┌────────┼────────┼────────┼────────┼────────┼────────┼────────┤
-    //         (blank Z–B)              Home≈Lower                           End≈Raise  (blank N M)  , . /
-       KC_LSFT, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, MO(_SYM_HOME),    MO(_SYM_END), XXXXXXX, XXXXXXX, KC_COMM, KC_DOT,  KC_SLSH, KC_RSFT,
+    //         (blank Z–B)              Home≈Lower                           End≈Raise  N:-/_ M:=/+  , . /
+       KC_LSFT, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, MO(_SYM_HOME),    MO(_SYM_END), SYM_MINS, SYM_EQL, KC_COMM, KC_DOT,  KC_SLSH, KC_RSFT,
     //└────────┴────────┴────────┴───┬────┴───┬────┴───┬────┴───┬────┘        └───┬────┴───┬────┴───┬────┴───┬────┴────────┴────────┴────────┘
     //                               Cmd      A        O                          E        U        Alt
                                       LM(_COMPUTER, MOD_LGUI), STN_A, STN_O,       STN_E,   STN_U,   LM(_COMPUTER, MOD_RALT)

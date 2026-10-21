@@ -196,16 +196,22 @@ Esc → ` ; Shift+Esc → ~ ; Esc+* → close `. Semicolon at QWERTY SCLN (left 
 
 ---
 
-## Steno — End (F-keys only)
+## Steno — End (F-keys + volume)
 
 <div style="background:#c8e6c9;padding:1rem 1.25rem 1.5rem;border-radius:8px;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13px;line-height:1.35;overflow-x:auto">
 
 <pre style="margin:0;white-space:pre">
 ┌──────┬──────┬──────┬──────┬──────┬──────┐                    ┌──────┬──────┬──────┬──────┬──────┬──────┐
 │ F12  │  F1  │  F2  │  F3  │  F4  │  F5  │                    │  F6  │  F7  │  F8  │  F9  │ F10  │ F11  │
-└──────┴──────┴──────┴──────┴──────┴──────┘                    └──────┴──────┴──────┴──────┴──────┴──────┘
+├──────┼──────┼──────┼──────┼──────┼──────┤                    ├──────┼──────┼──────┼──────┼──────┼──────┤
+│      │      │      │      │      │      │                    │      │      │      │      │      │      │
+├──────┼──────┼──────┼──────┼──────┼──────┤                    ├──────┼──────┼──────┼──────┼──────┼──────┤
+│      │      │      │ Vol+ │      │      │                    │      │      │      │      │      │      │
+├──────┼──────┼──────┼──────┼──────┼──────┬──────┐      ┌──────┼──────┼──────┼──────┼──────┼──────┼──────┤
+│      │      │      │ Vol− │      │      │      │      │      │      │      │      │      │      │      │
+└──────┴──────┴──────┴───┬──┴───┬──┴───┬──┴───┬──┘      └──┬───┴──┬───┴──┬───┴──┬───┴──────┴──────┴──────┘
 
-Other Raise-like symbols: base Shift+digit / Home layer.
+Vol+/Vol− match QWERTY Raise positions. Other Raise-like symbols: base Shift+digit / Home layer.
 </pre>
 
 </div>
@@ -234,7 +240,7 @@ Other Raise-like symbols: base Shift+digit / Home layer.
 | Steno `=` / `+` | **Home + Bksp** / **Home + Shift + Bksp** |
 | Steno `;` / `:` | **Home + ;** (QWERTY SCLN) / **Home + Shift + ;** |
 | Steno `-` / `_` | **Home + Minus** / **Home + Shift + Minus** |
-| Steno F-keys | Hold **End** |
+| Steno F-keys / Vol± | Hold **End** (Vol+ / Vol− same slots as QWERTY Raise) |
 | Bootloader | **Lower + R** (left) or **Raise + Del** (right) |
 | Clear EEPROM | **Lower + Z** or **Raise + RShift** |
 | Toggle Steno ↔ QWERTY | Hold **Cmd**, then **A+S+D+F** (also enters Steno from Game) |

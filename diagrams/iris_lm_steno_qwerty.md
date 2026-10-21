@@ -68,11 +68,9 @@ Toggle: hold **Cmd**, then chord **Q + W + E + R** (works from QWERTY, Steno, or
 <pre style="margin:0;white-space:pre">
 ┌──────┬──────┬──────┬──────┬──────┬──────┐                    ┌──────┬──────┬──────┬──────┬──────┬──────┐
 │  `   │  !   │  @   │  #   │  $   │  %   │                    │  ^   │  &amp;   │  *   │  [   │  ]   │  =   │
-│      │      │      │      │      │      │                    │      │      │      │Shift→│Shift→│Shift→│
 │      │      │      │      │      │      │                    │      │      │      │  {   │  }   │  +   │
 ├──────┼──────┼──────┼──────┼──────┼──────┤                    ├──────┼──────┼──────┼──────┼──────┼──────┤
 │  ~   │      │  ↑   │      │ Boot │      │                    │      │  P7  │  P8  │  P9  │  P0  │  |   │
-│      │      │      │      │      │      │                    │      │      │      │      │      │Shift→│
 │      │      │      │      │      │      │                    │      │      │      │      │      │  \   │
 ├──────┼──────┼──────┼──────┼──────┼──────┤                    ├──────┼──────┼──────┼──────┼──────┼──────┤
 │ Ctrl │  ←   │  ↓   │  →   │      │  [   │                    │  ←   │  ↓   │  ↑   │  →   │  +   │      │
@@ -85,8 +83,7 @@ Toggle: hold **Cmd**, then chord **Q + W + E + R** (works from QWERTY, Steno, or
 
 * Word Mod: Lower + Space on the *current* base layout (QWERTY or Game thumbs), then ←/→
   (or hjkl). Opt on Mac / Ctrl on Win·Linux — not tied to QWERTY’s physical Space key.
-* Lower + Bksp → `=` ; Lower + Shift + Bksp → `+` (`SYM_EQL`).
-* Lower + Del → `|` ; Lower + Shift + Del → `\` (`SYM_PIPE`).
+* Bksp =/+ (`SYM_EQL`); Del = |/\ (`SYM_PIPE`).
 
 </pre>
 
@@ -133,7 +130,6 @@ Toggle: hold **Cmd**, then chord **A + S + D + F** (works from QWERTY, Game, or 
 ┌──────┬──────┬──────┬──────┬──────┬──────┐                    ┌──────┬──────┬──────┬──────┬──────┬──────┐
 │ Esc  │  1   │  2   │  3   │  4   │  5   │                    │  6   │  7   │  8   │  9   │  0   │ Bksp │ ← both LEDs orange
 │  ~   │  !   │  @   │  #   │  $   │  %   │                    │  ^   │  &   │  *   │  (   │  )   │      │
-│      │Shift │Shift │Shift │Shift │Shift │                    │Shift │Shift │Shift │Shift │Shift │      │
 ├──────┼──────┼──────┼──────┼──────┼──────┤                    ├──────┼──────┼──────┼──────┼──────┼──────┤
 │ Tab  │  #   │  T-  │  P-  │  H-  │  *   │                    │  *   │  -F  │  -P  │  -L  │  -T  │  -D  │
 ├──────┼──────┼──────┼──────┼──────┼──────┤                    ├──────┼──────┼──────┼──────┼──────┼──────┤
@@ -142,13 +138,12 @@ Toggle: hold **Cmd**, then chord **A + S + D + F** (works from QWERTY, Game, or 
 ├──────┼──────┼──────┼──────┼──────┼──────┬──────┐      ┌──────┼──────┼──────┼──────┼──────┼──────┼──────┤
 │Shift │      │      │      │      │      │ Home │      │ End  │      │      │  ,   │  .   │  /   │Shift │
 │      │      │      │      │      │      │≈Lowr │      │≈Rais │      │      │  <   │  >   │  ?   │      │
-│      │      │      │      │      │      │      │      │      │      │      │Shift │Shift │Shift│      │
 └──────┴──────┴──────┴───┬──┴───┬──┴───┬──┴───┬──┘      └──┬───┴──┬───┴──┬───┴──┬───┴──────┴──────┴──────┘
                          │ Cmd  │  A   │  O   │            │  E   │  U   │ Alt  │
                          │comp. │attach│attach│            │      │      │comp. │
                          └──────┴──────┴──────┘            └──────┴──────┴──────┘
 
-Digits / , . / ? / Tab / Bksp go to Plover (Lapwing). Shift+number and Shift+, . → symbols (!@#$%^&amp;*&lt;&gt;);
+Digits / , . / ? / Tab / Bksp go to Plover (Lapwing). Number-row and , . / pairs are unshifted/shifted symbols;
 thumbs A/O while Shift is held = Emily spacing (before / after). Ctrl/Cmd/Alt = Computer QWERTY.
 Home / End = symbol layers. Z–B and N M blank. # is Lapwing number key (S1).
 </pre>
@@ -172,24 +167,20 @@ All symbols here send **Gemini strokes** (Lapwing/Emily), not HID. `!@#$%^&amp;*
 <pre style="margin:0;white-space:pre">
 ┌──────┬──────┬──────┬──────┬──────┬──────┐                    ┌──────┬──────┬──────┬──────┬──────┬──────┐
 │  `   │      │      │      │      │      │                    │      │      │      │  [   │  ]   │  =   │
-│Shift→│      │      │      │      │      │                    │      │      │      │Shift→│Shift→│Shift→│
 │  ~   │      │      │      │      │      │                    │      │      │      │  {   │  }   │  +   │
 ├──────┼──────┼──────┼──────┼──────┼──────┤                    ├──────┼──────┼──────┼──────┼──────┼──────┤
 │      │      │      │      │      │  *   │                    │  *   │      │      │      │      │  |   │
-│      │      │      │      │      │close │                    │close │      │      │      │      │Shift→│
-│      │      │      │      │      │      │                    │      │      │      │      │      │  \   │
+│      │      │      │      │      │close │                    │close │      │      │      │      │  \   │
 ├──────┼──────┼──────┼──────┼──────┼──────┤                    ├──────┼──────┼──────┼──────┼──────┼──────┤
 │      │      │      │      │      │  *   │                    │  *   │      │      │      │  ;   │  '   │
-│      │      │      │      │      │close │                    │close │      │      │      │Shift→│Shift→│
-│      │      │      │      │      │      │                    │      │      │      │      │  :   │  "   │
+│      │      │      │      │      │close │                    │close │      │      │      │  :   │  "   │
 ├──────┼──────┼──────┼──────┼──────┼──────┬──────┐      ┌──────┼──────┼──────┼──────┼──────┼──────┼──────┤
 │Shift │      │      │      │      │      │      │      │      │      │      │      │      │  -   │Shift │
-│      │      │      │      │      │      │      │      │      │      │      │      │      │Shift→│
-│      │      │      │      │      │      │      │      │      │      │      │      │      │  _   │
+│      │      │      │      │      │      │      │      │      │      │      │      │      │  _   │      │
 └──────┴──────┴──────┴───┬──┴───┬──┴───┬──┴───┬──┘      └──┬───┴──┬───┴──┬───┴──┬───┴──────┴──────┴──────┘
 
-Esc → ` ; Shift+Esc → ~ ; Esc+* → close `. Semicolon at QWERTY SCLN (left of quote): ; / : . Quote → ' / " ; Quote+* → close.
-[ ] → braces with Shift. Bksp → = / + . Minus → _ with Shift. * (T/G/Y/H) = close flags. Parens: Shift+9/0 on base.
+`/~ ; Esc+* closes backtick. ;/: at QWERTY SCLN (left of quote). '/" ; Quote+* closes. * (T/G/Y/H) = close flags.
+Parens: Shift+9/0 on base.
 </pre>
 
 </div>

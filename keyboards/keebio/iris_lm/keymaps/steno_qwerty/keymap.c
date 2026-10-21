@@ -30,11 +30,11 @@ enum custom_keycodes {
     ST_BSPC,               // PW-FP  backspace
     ST_TAB,                // TA*B   tab
     // On QWERTY Lower: HID. On steno Home: Gemini (Emily / Lapwing).
-    SYM_PIPE, // | ; Shift → \
+    SYM_PIPE, // | ; Shift → backslash
     SYM_EQL,  // = ; Shift → +
     // Steno Home only — always Gemini strokes (not HID).
     SYM_QUOT, // ' / KR-RG; Shift → " / KW-GS; with * → KR*RG / KW*GS
-    SYM_GRV,  // ` / KH-FG; Shift → ~ (Emily); with * → KH*FG
+    SYM_GRV,  // grave / KH-FG; Shift → ~ (Emily); with * → KH*FG
     SYM_STAR, // Flag only (*); does not send Gemini alone
     SYM_LBRC, // [ / PWR-BGT; Shift → { / TPR-BGT
     SYM_RBRC, // ] / PWR*BGT; Shift → } / TPR*BGT

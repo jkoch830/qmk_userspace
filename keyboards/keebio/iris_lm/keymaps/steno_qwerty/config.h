@@ -17,7 +17,7 @@
 // Right-half mode LEDs need default_layer_state on the slave.
 #define SPLIT_LAYER_STATE_ENABLE
 
-// Base modes are 0–2; overlays must be above them so TL_LOWR/TL_UPPR win.
+// Base modes are 0–2; Lower/Raise/Adjust are 3–5; steno overlays are 6–8.
 #define TRI_LAYER_LOWER_LAYER 3  // _LOWER
 #define TRI_LAYER_UPPER_LAYER 4  // _RAISE
 #define TRI_LAYER_ADJUST_LAYER 5 // _ADJUST (all transparent)

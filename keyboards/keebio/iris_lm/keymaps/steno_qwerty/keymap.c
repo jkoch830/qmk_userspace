@@ -29,14 +29,16 @@ enum custom_keycodes {
     ST_RPRN,               // 0 → #E,  or Shift+0 → PR*EPB )
     ST_BSPC,               // PW-FP  backspace
     ST_TAB,                // TA*B   tab
-    // | on press; Shift+| → \ (all modes). Same physical idea as ` / ~.
-    SYM_PIPE,
-    // = on press; Shift+= → + (Lower+Bksp; mirrors =/+ on a normal keyboard).
-    SYM_EQL,
-    // Home-layer quote/backtick (hold any * = T/G/Y/H → closing Lapwing * variant).
+    // On QWERTY Lower: HID. On steno Home: Gemini (Emily / Lapwing).
+    SYM_PIPE, // | ; Shift → \
+    SYM_EQL,  // = ; Shift → +
+    // Steno Home only — always Gemini strokes (not HID).
     SYM_QUOT, // ' / KR-RG; Shift → " / KW-GS; with * → KR*RG / KW*GS
-    SYM_GRV,  // ` / KH-FG; Shift → ~; with * → KH*FG
-    SYM_STAR, // Flag only on Home layer (*1–*4); does not send Gemini alone
+    SYM_GRV,  // ` / KH-FG; Shift → ~ (Emily); with * → KH*FG
+    SYM_STAR, // Flag only (*); does not send Gemini alone
+    SYM_LBRC, // [ / PWR-BGT; Shift → { / TPR-BGT
+    SYM_RBRC, // ] / PWR*BGT; Shift → } / TPR*BGT
+    SYM_MINS, // - / H-PB; Shift → _ / Emily BG
 };
 
 enum combos {
@@ -206,6 +208,12 @@ static const uint16_t stroke_dquo[]      = {STN_KL, STN_WL, STN_GR, STN_SR};    
 static const uint16_t stroke_dquo_cl[]   = {STN_KL, STN_WL, STN_ST1, STN_GR, STN_SR};            // KW*GS
 static const uint16_t stroke_grv[]       = {STN_KL, STN_HL, STN_FR, STN_GR};                     // KH-FG
 static const uint16_t stroke_grv_cl[]    = {STN_KL, STN_HL, STN_ST1, STN_FR, STN_GR};            // KH*FG
+// Brackets / hyphen (Lapwing).
+static const uint16_t stroke_lbrc[]      = {STN_PL, STN_WL, STN_RL, STN_BR, STN_GR, STN_TR};     // PWR-BGT [
+static const uint16_t stroke_lcbr[]      = {STN_TL, STN_PL, STN_RL, STN_BR, STN_GR, STN_TR};     // TPR-BGT {
+static const uint16_t stroke_rbrc[]      = {STN_PL, STN_WL, STN_RL, STN_ST1, STN_BR, STN_GR, STN_TR}; // PWR*BGT ]
+static const uint16_t stroke_rcbr[]      = {STN_TL, STN_PL, STN_RL, STN_ST1, STN_BR, STN_GR, STN_TR}; // TPR*BGT }
+static const uint16_t stroke_hyphen[]    = {STN_HL, STN_PR, STN_BR};                             // H-PB -
 
 // How many SYM_STAR keys (*1–*4) are held on the Home layer.
 static uint8_t sym_star_held = 0;
@@ -225,7 +233,17 @@ static const uint16_t emily_amp[]  = {STN_FR, STN_BR, STN_GR};                  
 static const uint16_t emily_ast[]  = {STN_LR};                                         // L
 static const uint16_t emily_lt[]   = {STN_FR, STN_PR, STN_LR};                         // FPL (+U)
 static const uint16_t emily_gt[]   = {STN_RR, STN_BR, STN_GR};                         // RBG (+U)
+static const uint16_t emily_eql[]  = {STN_PR, STN_BR, STN_LR, STN_GR};                 // PBLG =
+static const uint16_t emily_plus[] = {STN_GR};                                         // G +
+static const uint16_t emily_pipe[] = {STN_PR, STN_BR};                                 // PB |
+static const uint16_t emily_bsls[] = {STN_FR, STN_BR};                                 // FB backslash
+static const uint16_t emily_unds[] = {STN_BR, STN_GR};                                 // BG _
+static const uint16_t emily_tild[] = {STN_FR, STN_PR, STN_BR, STN_GR};                 // FPBG ~
 static const uint16_t stroke_excl[] = {STN_TL, STN_PL, STN_BR, STN_GR};                // TP-BG (!)
+
+static bool sym_shifted(void) {
+    return (get_mods() | get_oneshot_mods()) & MOD_MASK_SHIFT;
+}
 
 static bool steno_mode_active(void) {
     return layer_state_cmp(default_layer_state, _STENO);
@@ -432,42 +450,56 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             }
             return false;
         case SYM_PIPE:
-            // Unshifted | ; Shift held → \ (unregister Shift so the host sees \).
+            // QWERTY Lower: HID |/\ . Steno Home: Emily PB / FB.
             if (record->event.pressed) {
-                const uint8_t mods    = get_mods();
-                const uint8_t oneshot = get_oneshot_mods();
-                const bool    shifted = (mods | oneshot) & MOD_MASK_SHIFT;
-                if (shifted) {
-                    if (mods & MOD_MASK_SHIFT) {
-                        del_mods(mods & MOD_MASK_SHIFT);
+                if (IS_LAYER_ON(_SYM_HOME)) {
+                    if (sym_shifted()) {
+                        send_emily_symbol(emily_bsls, ARRAY_SIZE(emily_bsls), false);
+                    } else {
+                        send_emily_symbol(emily_pipe, ARRAY_SIZE(emily_pipe), false);
                     }
-                    if (oneshot & MOD_MASK_SHIFT) {
-                        del_oneshot_mods(oneshot & MOD_MASK_SHIFT);
-                    }
-                    tap_code(KC_BSLS);
-                    set_mods(mods);
                 } else {
-                    tap_code16(KC_PIPE);
+                    const uint8_t mods    = get_mods();
+                    const uint8_t oneshot = get_oneshot_mods();
+                    if (sym_shifted()) {
+                        if (mods & MOD_MASK_SHIFT) {
+                            del_mods(mods & MOD_MASK_SHIFT);
+                        }
+                        if (oneshot & MOD_MASK_SHIFT) {
+                            del_oneshot_mods(oneshot & MOD_MASK_SHIFT);
+                        }
+                        tap_code(KC_BSLS);
+                        set_mods(mods);
+                    } else {
+                        tap_code16(KC_PIPE);
+                    }
                 }
             }
             return false;
         case SYM_EQL:
-            // Unshifted = ; Shift held → +.
+            // QWERTY Lower: HID =/+ . Steno Home: Emily PBLG / G.
             if (record->event.pressed) {
-                const uint8_t mods    = get_mods();
-                const uint8_t oneshot = get_oneshot_mods();
-                const bool    shifted = (mods | oneshot) & MOD_MASK_SHIFT;
-                if (shifted) {
-                    if (mods & MOD_MASK_SHIFT) {
-                        del_mods(mods & MOD_MASK_SHIFT);
+                if (IS_LAYER_ON(_SYM_HOME)) {
+                    if (sym_shifted()) {
+                        send_emily_symbol(emily_plus, ARRAY_SIZE(emily_plus), false);
+                    } else {
+                        send_emily_symbol(emily_eql, ARRAY_SIZE(emily_eql), false);
                     }
-                    if (oneshot & MOD_MASK_SHIFT) {
-                        del_oneshot_mods(oneshot & MOD_MASK_SHIFT);
-                    }
-                    tap_code16(KC_PLUS);
-                    set_mods(mods);
                 } else {
-                    tap_code(KC_EQL);
+                    const uint8_t mods    = get_mods();
+                    const uint8_t oneshot = get_oneshot_mods();
+                    if (sym_shifted()) {
+                        if (mods & MOD_MASK_SHIFT) {
+                            del_mods(mods & MOD_MASK_SHIFT);
+                        }
+                        if (oneshot & MOD_MASK_SHIFT) {
+                            del_oneshot_mods(oneshot & MOD_MASK_SHIFT);
+                        }
+                        tap_code16(KC_PLUS);
+                        set_mods(mods);
+                    } else {
+                        tap_code(KC_EQL);
+                    }
                 }
             }
             return false;
@@ -496,23 +528,42 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             }
             return false;
         case SYM_GRV:
-            // ` open (KH-FG), KH*FG when * held; Shift → ~ (HID) regardless of *.
+            // ` open (KH-FG), KH*FG when * held; Shift → Emily ~.
             if (record->event.pressed) {
-                if ((get_mods() | get_oneshot_mods()) & MOD_MASK_SHIFT) {
-                    const uint8_t mods    = get_mods();
-                    const uint8_t oneshot = get_oneshot_mods();
-                    if (mods & MOD_MASK_SHIFT) {
-                        del_mods(mods & MOD_MASK_SHIFT);
-                    }
-                    if (oneshot & MOD_MASK_SHIFT) {
-                        del_oneshot_mods(oneshot & MOD_MASK_SHIFT);
-                    }
-                    tap_code16(KC_TILD);
-                    set_mods(mods);
+                if (sym_shifted()) {
+                    send_emily_symbol(emily_tild, ARRAY_SIZE(emily_tild), false);
                 } else if (sym_star_held > 0) {
                     send_gemini_stroke(stroke_grv_cl, ARRAY_SIZE(stroke_grv_cl));
                 } else {
                     send_gemini_stroke(stroke_grv, ARRAY_SIZE(stroke_grv));
+                }
+            }
+            return false;
+        case SYM_LBRC:
+            if (record->event.pressed) {
+                if (sym_shifted()) {
+                    send_gemini_stroke_unshifted(stroke_lcbr, ARRAY_SIZE(stroke_lcbr));
+                } else {
+                    send_gemini_stroke(stroke_lbrc, ARRAY_SIZE(stroke_lbrc));
+                }
+            }
+            return false;
+        case SYM_RBRC:
+            if (record->event.pressed) {
+                if (sym_shifted()) {
+                    send_gemini_stroke_unshifted(stroke_rcbr, ARRAY_SIZE(stroke_rcbr));
+                } else {
+                    send_gemini_stroke(stroke_rbrc, ARRAY_SIZE(stroke_rbrc));
+                }
+            }
+            return false;
+        case SYM_MINS:
+            // - (H-PB); Shift → _ (Emily BG). Home+Shift+Minus = underscore.
+            if (record->event.pressed) {
+                if (sym_shifted()) {
+                    send_emily_symbol(emily_unds, ARRAY_SIZE(emily_unds), false);
+                } else {
+                    send_gemini_stroke(stroke_hyphen, ARRAY_SIZE(stroke_hyphen));
                 }
             }
             return false;
@@ -703,26 +754,26 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                                            _______, KC_SPC,  KC_ENT,                    KC_SPC,  KC_ENT,  _______
     ),
 
-    /* SYM_HOME — hold Home in steno (≈ Lower symbols). Unused = XXXXXXX (no steno bleed).
-     * No ( ) { } here — use Shift+9/0 on base steno for parens; braces via Shift+[ ] if needed. */
+    /* SYM_HOME — hold Home in steno. Symbols are Gemini (Lapwing/Emily), not HID.
+     * !@#$%^&* unset (use Shift+digit on base). No dedicated ( ) — use Shift+9/0. */
     [_SYM_HOME] = LAYOUT(
-    // Esc: ` / *` ; 9/0: [ ] ; Bksp: = / Shift +
-       SYM_GRV, KC_EXLM, KC_AT,   KC_HASH, KC_DLR,  KC_PERC,                            KC_CIRC, KC_AMPR, KC_ASTR, KC_LBRC, KC_RBRC, SYM_EQL,
-    // Tab: ~ ; * on T/Y ; Del: | / Shift backslash
-       KC_TILD, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, SYM_STAR,                           SYM_STAR, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, SYM_PIPE,
-    // * on G/H ; Quote: ' / " (+ * → close)
-       XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, SYM_STAR,                           SYM_STAR, XXXXXXX, XXXXXXX, XXXXXXX, KC_PLUS, SYM_QUOT,
-       KC_LSFT, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,          XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_MINS, KC_RSFT,
+    // Esc: ` / ~ ; 9/0: [ ] / { } ; Bksp: = / +
+       SYM_GRV, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                            XXXXXXX, XXXXXXX, XXXXXXX, SYM_LBRC, SYM_RBRC, SYM_EQL,
+    // * on T/Y ; Del: | / backslash
+       XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, SYM_STAR,                           SYM_STAR, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, SYM_PIPE,
+    // * on G/H ; Quote: ' / "
+       XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, SYM_STAR,                           SYM_STAR, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, SYM_QUOT,
+    //                                                         Minus: - / Shift _
+       KC_LSFT, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,          XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, SYM_MINS, KC_RSFT,
                                            XXXXXXX, XXXXXXX, XXXXXXX,                   XXXXXXX, XXXXXXX, XXXXXXX
     ),
 
-    /* SYM_END — hold End in steno (≈ Raise symbols). No ( ) — use Shift+9/0 on base. */
+    /* SYM_END — F-keys only (other Raise symbols live on base Shift or Home). */
     [_SYM_END] = LAYOUT(
        KC_F12,  KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,                              KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,
-       XXXXXXX, KC_EXLM, KC_AT,   KC_HASH, KC_DLR,  KC_PERC,                            KC_CIRC, KC_AMPR, KC_ASTR, XXXXXXX, XXXXXXX, XXXXXXX,
-       XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_UNDS,                            KC_EQL,  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_BSLS,
-    //                                                     End held          + on N
-       KC_LSFT, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_MINS, XXXXXXX,          XXXXXXX, KC_PLUS, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_RSFT,
+       XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                            XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+       XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                            XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+       XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,          XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
                                            XXXXXXX, XXXXXXX, XXXXXXX,                   XXXXXXX, XXXXXXX, XXXXXXX
     )
 };

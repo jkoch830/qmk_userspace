@@ -165,50 +165,47 @@ Full QWERTY mirror + the held modifier. Use for `Cmd+Space`, `Cmd+Shift+E`, etc.
 
 ## Steno — Home (≈ Lower symbols)
 
+All symbols here send **Gemini strokes** (Lapwing/Emily), not HID. `!@#$%^&amp;*` unset — use Shift+digit on base.
+
 <div style="background:#c8e6c9;padding:1rem 1.25rem 1.5rem;border-radius:8px;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13px;line-height:1.35;overflow-x:auto">
 
 <pre style="margin:0;white-space:pre">
 ┌──────┬──────┬──────┬──────┬──────┬──────┐                    ┌──────┬──────┬──────┬──────┬──────┬──────┐
-│  `   │  !   │  @   │  #   │  $   │  %   │                    │  ^   │  &amp;   │  *   │  [   │  ]   │  =   │
-│Shift→│      │      │      │      │      │                    │      │      │      │      │      │Shift→│
-│  ~   │      │      │      │      │      │                    │      │      │      │      │      │  +   │
+│  `   │      │      │      │      │      │                    │      │      │      │  [   │  ]   │  =   │
+│Shift→│      │      │      │      │      │                    │      │      │      │Shift→│Shift→│Shift→│
+│  ~   │      │      │      │      │      │                    │      │      │      │  {   │  }   │  +   │
 ├──────┼──────┼──────┼──────┼──────┼──────┤                    ├──────┼──────┼──────┼──────┼──────┼──────┤
-│  ~   │      │      │      │      │  *   │                    │  *   │      │      │      │      │  |   │
+│      │      │      │      │      │  *   │                    │  *   │      │      │      │      │  |   │
 │      │      │      │      │      │close │                    │close │      │      │      │      │Shift→│
 │      │      │      │      │      │      │                    │      │      │      │      │      │  \   │
 ├──────┼──────┼──────┼──────┼──────┼──────┤                    ├──────┼──────┼──────┼──────┼──────┼──────┤
-│      │      │      │      │      │  *   │                    │  *   │      │      │      │  +   │  '   │
+│      │      │      │      │      │  *   │                    │  *   │      │      │      │      │  '   │
 │      │      │      │      │      │close │                    │close │      │      │      │      │Shift→│
 │      │      │      │      │      │      │                    │      │      │      │      │      │  "   │
 ├──────┼──────┼──────┼──────┼──────┼──────┬──────┐      ┌──────┼──────┼──────┼──────┼──────┼──────┼──────┤
 │Shift │      │      │      │      │      │      │      │      │      │      │      │      │  -   │Shift │
+│      │      │      │      │      │      │      │      │      │      │      │      │      │Shift→│
+│      │      │      │      │      │      │      │      │      │      │      │      │      │  _   │
 └──────┴──────┴──────┴───┬──┴───┬──┴───┬──┴───┬──┘      └──┬───┴──┬───┴──┬───┴──┬───┴──────┴──────┴──────┘
 
-No ( ) { } on this layer (use Shift+9/0 on base steno for parens).
-Esc → ` ; Shift+Esc → ~ ; Esc+* → close backtick. Quote → ' ; Shift+Quote → " ; Quote+* → close.
-* keys (T/G/Y/H) are close flags only — hold * before quote/Esc.
+Esc → ` ; Shift+Esc → ~ ; Esc+* → close `. Quote → ' / " ; Quote+* → close.
+[ ] → braces with Shift. Minus → _ with Shift. * (T/G/Y/H) = close flags. Parens: Shift+9/0 on base.
 </pre>
 
 </div>
 
 ---
 
-## Steno — End (≈ Raise symbols)
+## Steno — End (F-keys only)
 
 <div style="background:#c8e6c9;padding:1rem 1.25rem 1.5rem;border-radius:8px;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13px;line-height:1.35;overflow-x:auto">
 
 <pre style="margin:0;white-space:pre">
 ┌──────┬──────┬──────┬──────┬──────┬──────┐                    ┌──────┬──────┬──────┬──────┬──────┬──────┐
 │ F12  │  F1  │  F2  │  F3  │  F4  │  F5  │                    │  F6  │  F7  │  F8  │  F9  │ F10  │ F11  │
-├──────┼──────┼──────┼──────┼──────┼──────┤                    ├──────┼──────┼──────┼──────┼──────┼──────┤
-│      │  !   │  @   │  #   │  $   │  %   │                    │  ^   │  &amp;   │  *   │      │      │      │
-├──────┼──────┼──────┼──────┼──────┼──────┤                    ├──────┼──────┼──────┼──────┼──────┼──────┤
-│      │      │      │      │      │  _   │                    │  =   │      │      │      │      │  \   │
-├──────┼──────┼──────┼──────┼──────┼──────┬──────┐      ┌──────┼──────┼──────┼──────┼──────┼──────┼──────┤
-│Shift │      │      │      │      │  -   │      │      │      │  +   │      │      │      │      │Shift │
-└──────┴──────┴──────┴───┬──┴───┬──┴───┬──┴───┬──┘      └──┬───┴──┬───┴──┬───┴──┬───┴──────┴──────┴──────┘
+└──────┴──────┴──────┴──────┴──────┴──────┘                    └──────┴──────┴──────┴──────┴──────┴──────┘
 
-Parens via Shift+9/0 on base steno. End key itself is the layer hold (blank in grid).
+Other Raise-like symbols: base Shift+digit / Home layer.
 </pre>
 
 </div>
@@ -233,8 +230,9 @@ Parens via Shift+9/0 on base steno. End key itself is the layer hold (blank in g
 | Steno `(` / `)` | **Shift+9** / **Shift+0** |
 | Steno Backspace / Tab | **Bksp** / **Tab** → PW-FP / TA\*B |
 | Steno OS shortcuts | Hold **Ctrl / Cmd / Alt** → temporary QWERTY + that mod |
-| Steno Lower-like symbols | Hold **Home** (see Home layer) |
-| Steno Raise-like symbols | Hold **End** (see End layer) |
+| Steno Home symbols | Hold **Home** — Gemini strokes (`[]{}=+\|-_\`'"` etc.) |
+| Steno `-` / `_` | **Home + Minus** / **Home + Shift + Minus** |
+| Steno F-keys | Hold **End** |
 | Bootloader | **Lower + R** (left) or **Raise + Del** (right) |
 | Clear EEPROM | **Lower + Z** or **Raise + RShift** |
 | Toggle Steno ↔ QWERTY | Hold **Cmd**, then **A+S+D+F** (also enters Steno from Game) |

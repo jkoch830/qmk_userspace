@@ -131,34 +131,26 @@ Toggle: hold **Cmd**, then chord **A + S + D + F** (works from QWERTY, Game, or 
 
 <pre style="margin:0;white-space:pre">
 ┌──────┬──────┬──────┬──────┬──────┬──────┐                    ┌──────┬──────┬──────┬──────┬──────┬──────┐
-│ Esc  │  1*  │  2*  │  3*  │  4*  │  5*  │                    │  6*  │  7*  │  8*  │  9*  │  0*  │Bksp* │ ← both LEDs orange
-│  ~   │ #-R  │ #-B  │ #-G  │ #-FR │ #-PB │                    │ #-LG │ #-F  │ #-P  │ #-L  │ #E   │PW-FP │
+│ Esc  │  1   │  2   │  3   │  4   │  5   │                    │  6   │  7   │  8   │  9   │  0   │ Bksp │ ← both LEDs orange
+│  ~   │  !   │  @   │  #   │  $   │  %   │                    │  ^   │  &   │  *   │  (   │  )   │      │
 │      │Shift │Shift │Shift │Shift │Shift │                    │Shift │Shift │Shift │Shift │Shift │      │
-│      │  !   │  @   │  #   │  $   │  %   │                    │  ^   │  &   │  *   │PREPB │PR*EPB│      │
-│      │TP-BG │Emily │Emily │Emily │Emily │                    │Emily │Emily │Emily │  (   │  )   │      │
 ├──────┼──────┼──────┼──────┼──────┼──────┤                    ├──────┼──────┼──────┼──────┼──────┼──────┤
-│Tab*  │  #   │  T-  │  P-  │  H-  │  *1  │                    │  *3  │  -F  │  -P  │  -L  │  -T  │  -D  │
-│TA*B  │ (S1) │      │      │      │      │                    │      │      │      │      │      │      │
+│ Tab  │  #   │  T-  │  P-  │  H-  │  *   │                    │  *   │  -F  │  -P  │  -L  │  -T  │  -D  │
 ├──────┼──────┼──────┼──────┼──────┼──────┤                    ├──────┼──────┼──────┼──────┼──────┼──────┤
-│Ctrl* │  S   │  K-  │  W-  │  R-  │  *2  │                    │  *4  │  -R  │  -B  │  -G  │  -S  │  -Z  │
-│comp. │ (S2) │      │      │      │      │                    │      │      │      │      │      │      │
+│ Ctrl │  S   │  K-  │  W-  │  R-  │  *   │                    │  *   │  -R  │  -B  │  -G  │  -S  │  -Z  │
+│comp. │      │      │      │      │      │                    │      │      │      │      │      │      │
 ├──────┼──────┼──────┼──────┼──────┼──────┬──────┐      ┌──────┼──────┼──────┼──────┼──────┼──────┼──────┤
-│Shift │      │      │      │      │      │Home* │      │ End* │      │      │  ,*  │  .*  │  /*  │Shift │
-│      │      │      │      │      │      │≈Lowr │      │≈Rais │      │      │KW-BG │TP-PL │OEU  │      │
+│Shift │      │      │      │      │      │ Home │      │ End  │      │      │  ,   │  .   │  /   │Shift │
+│      │      │      │      │      │      │≈Lowr │      │≈Rais │      │      │  <   │  >   │  ?   │      │
 │      │      │      │      │      │      │      │      │      │      │      │Shift │Shift │Shift│      │
-│      │      │      │      │      │      │      │      │      │      │      │  <   │  >   │KW-PL│      │
-│      │      │      │      │      │      │      │      │      │      │      │Emily │Emily │  ?  │      │
 └──────┴──────┴──────┴───┬──┴───┬──┴───┬──┴───┬──┘      └──┬───┴──┬───┴──┬───┴──┬───┴──────┴──────┴──────┘
-                         │ Cmd* │  A†  │  O†  │            │  E   │  U   │ Alt* │
+                         │ Cmd  │  A   │  O   │            │  E   │  U   │ Alt  │
                          │comp. │attach│attach│            │      │      │comp. │
                          └──────┴──────┴──────┘            └──────┴──────┴──────┘
 
-* Number / punct / Tab / Bksp send Lapwing or Emily GeminiPR strokes (not HID).
-  Digits: RH numberpad (`#-R` = 1, …). Period: TP-PL. Z X C V B N M blank.
-* Shift+1 → `!` (TP-BG); Shift+2…8 → Emily `@#$%^&*`; Shift+, . → Emily `<>`.
-† While Shift is held, thumbs **A** / **O** are Emily attach (space before / after) — hold Shift, then A/O, then the key.
-* **Ctrl / Cmd / Alt** = momentary Computer (QWERTY + mod). **Home** / **End** ≈ Lower / Raise symbols.
-# is Gemini S1 — Plover Lapwing usually remaps S1 → #.
+Digits / , . / ? / Tab / Bksp go to Plover (Lapwing). Shift+number and Shift+, . → symbols (!@#$%^&amp;*&lt;&gt;);
+thumbs A/O while Shift is held = Emily spacing (before / after). Ctrl/Cmd/Alt = Computer QWERTY.
+Home / End = symbol layers. Z–B and N M blank. # is Lapwing number key (S1).
 </pre>
 
 </div>
@@ -177,26 +169,24 @@ Full QWERTY mirror + the held modifier. Use for `Cmd+Space`, `Cmd+Shift+E`, etc.
 
 <pre style="margin:0;white-space:pre">
 ┌──────┬──────┬──────┬──────┬──────┬──────┐                    ┌──────┬──────┬──────┬──────┬──────┬──────┐
-│  `*  │  !   │  @   │  #   │  $   │  %   │                    │  ^   │  &amp;   │  *   │  [   │  ]   │  =   │
-│KH-FG │      │      │      │      │      │                    │      │      │      │Shift→│Shift→│Shift→│
-│Shift→│      │      │      │      │      │                    │      │      │      │  {   │  }   │  +   │
-│  ~   │      │      │      │      │      │                    │      │      │      │      │      │      │
+│  `   │  !   │  @   │  #   │  $   │  %   │                    │  ^   │  &amp;   │  *   │  [   │  ]   │  =   │
+│Shift→│      │      │      │      │      │                    │      │      │      │      │      │Shift→│
+│  ~   │      │      │      │      │      │                    │      │      │      │      │      │  +   │
 ├──────┼──────┼──────┼──────┼──────┼──────┤                    ├──────┼──────┼──────┼──────┼──────┼──────┤
-│  ~   │      │      │      │      │  *1  │                    │  *3  │      │      │      │      │  |   │
+│  ~   │      │      │      │      │  *   │                    │  *   │      │      │      │      │  |   │
 │      │      │      │      │      │close │                    │close │      │      │      │      │Shift→│
 │      │      │      │      │      │      │                    │      │      │      │      │      │  \   │
 ├──────┼──────┼──────┼──────┼──────┼──────┤                    ├──────┼──────┼──────┼──────┼──────┼──────┤
-│      │      │      │      │      │  *2  │                    │  *4  │      │      │      │  +   │  '*  │
-│      │      │      │      │      │close │                    │close │      │      │      │      │KR-RG│
-│      │      │      │      │      │      │                    │      │      │      │      │      │Shift→│
+│      │      │      │      │      │  *   │                    │  *   │      │      │      │  +   │  '   │
+│      │      │      │      │      │close │                    │close │      │      │      │      │Shift→│
 │      │      │      │      │      │      │                    │      │      │      │      │      │  "   │
 ├──────┼──────┼──────┼──────┼──────┼──────┬──────┐      ┌──────┼──────┼──────┼──────┼──────┼──────┼──────┤
-│Shift │      │      │      │      │  {   │  (   │      │  )   │  }   │      │      │      │  -   │Shift │
+│Shift │      │      │      │      │      │      │      │      │      │      │      │      │  -   │Shift │
 └──────┴──────┴──────┴───┬──┴───┬──┴───┬──┴───┬──┘      └──┬───┴──┬───┴──┬───┴──┬───┴──────┴──────┴──────┘
 
-* Esc → ` (KH-FG); Shift+Esc → ~; Esc+*1–4 (T/G/Y/H) → close ` (KH*FG).
-* Quote → ' (KR-RG); Shift+Quote → " (KW-GS); Quote+* → KR*RG / KW*GS.
-* *1–4 are close flags only (no solo * stroke). Hold * before tapping quote/Esc.
+No ( ) { } on this layer (use Shift+9/0 on base steno for parens).
+Esc → ` ; Shift+Esc → ~ ; Esc+* → close backtick. Quote → ' ; Shift+Quote → " ; Quote+* → close.
+* keys (T/G/Y/H) are close flags only — hold * before quote/Esc.
 </pre>
 
 </div>
@@ -211,12 +201,14 @@ Full QWERTY mirror + the held modifier. Use for `Cmd+Space`, `Cmd+Shift+E`, etc.
 ┌──────┬──────┬──────┬──────┬──────┬──────┐                    ┌──────┬──────┬──────┬──────┬──────┬──────┐
 │ F12  │  F1  │  F2  │  F3  │  F4  │  F5  │                    │  F6  │  F7  │  F8  │  F9  │ F10  │ F11  │
 ├──────┼──────┼──────┼──────┼──────┼──────┤                    ├──────┼──────┼──────┼──────┼──────┼──────┤
-│      │  !   │  @   │  #   │  $   │  %   │                    │  ^   │  &amp;   │  *   │  (   │  )   │      │
+│      │  !   │  @   │  #   │  $   │  %   │                    │  ^   │  &amp;   │  *   │      │      │      │
 ├──────┼──────┼──────┼──────┼──────┼──────┤                    ├──────┼──────┼──────┼──────┼──────┼──────┤
 │      │      │      │      │      │  _   │                    │  =   │      │      │      │      │  \   │
 ├──────┼──────┼──────┼──────┼──────┼──────┬──────┐      ┌──────┼──────┼──────┼──────┼──────┼──────┼──────┤
-│Shift │      │      │      │      │  -   │  (   │      │      │  +   │      │      │      │      │Shift │
+│Shift │      │      │      │      │  -   │      │      │      │  +   │      │      │      │      │Shift │
 └──────┴──────┴──────┴───┬──┴───┬──┴───┬──┴───┬──┘      └──┬───┴──┬───┴──┬───┴──┬───┴──────┴──────┴──────┘
+
+Parens via Shift+9/0 on base steno. End key itself is the layer hold (blank in grid).
 </pre>
 
 </div>
@@ -235,11 +227,10 @@ Full QWERTY mirror + the held modifier. Use for `Cmd+Space`, `Cmd+Shift+E`, etc.
 | `[` `]` then `{` `}` | **Lower + 9/0**; add **Shift** for braces |
 | Vim arrows | **Lower + h j k l** |
 | Toggle RGB indicators | **Upper + Tab** |
-| Steno digits `0`–`9` | Number row → `#E` / `#-R`…`#-L` (Lapwing RH numberpad) |
-| Steno `,` `.` `/` `?` | → KW-BG / TP-PL / OEU / KW-PL |
-| Steno `!@#$%^&*` | **Shift+1…8** → TP-BG / Emily (hold **A**/**O** for attach) |
-| Steno `<>` | **Shift+,** / **Shift+.** → Emily (+ **A**/**O** attach) |
-| Steno `(` / `)` | **Shift+9** / **Shift+0** → PREPB / PR\*EPB |
+| Steno digits `0`–`9` | Number row (Lapwing numberpad to Plover) |
+| Steno `,` `.` `/` `?` | Unshifted punct; Shift+, . → `<>` ; Shift+/ → `?` |
+| Steno `!@#$%^&*` | **Shift+1…8** (hold **A**/**O** for Emily spacing) |
+| Steno `(` / `)` | **Shift+9** / **Shift+0** |
 | Steno Backspace / Tab | **Bksp** / **Tab** → PW-FP / TA\*B |
 | Steno OS shortcuts | Hold **Ctrl / Cmd / Alt** → temporary QWERTY + that mod |
 | Steno Lower-like symbols | Hold **Home** (see Home layer) |

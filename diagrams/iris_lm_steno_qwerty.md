@@ -171,9 +171,9 @@ All symbols here send **Gemini strokes** (Lapwing/Emily), not HID. `!@#$%^&amp;*
 
 <pre style="margin:0;white-space:pre">
 ┌──────┬──────┬──────┬──────┬──────┬──────┐                    ┌──────┬──────┬──────┬──────┬──────┬──────┐
-│  `   │      │      │      │      │      │                    │      │      │      │  [   │  ]   │  =   │
+│  `   │      │      │      │      │      │                    │      │      │      │  [   │  ]   │  ;   │
 │Shift→│      │      │      │      │      │                    │      │      │      │Shift→│Shift→│Shift→│
-│  ~   │      │      │      │      │      │                    │      │      │      │  {   │  }   │  +   │
+│  ~   │      │      │      │      │      │                    │      │      │      │  {   │  }   │  :   │
 ├──────┼──────┼──────┼──────┼──────┼──────┤                    ├──────┼──────┼──────┼──────┼──────┼──────┤
 │      │      │      │      │      │  *   │                    │  *   │      │      │      │      │  |   │
 │      │      │      │      │      │close │                    │close │      │      │      │      │Shift→│
@@ -189,7 +189,7 @@ All symbols here send **Gemini strokes** (Lapwing/Emily), not HID. `!@#$%^&amp;*
 └──────┴──────┴──────┴───┬──┴───┬──┴───┬──┴───┬──┘      └──┬───┴──┬───┴──┬───┴──┬───┴──────┴──────┴──────┘
 
 Esc → ` ; Shift+Esc → ~ ; Esc+* → close `. Quote → ' / " ; Quote+* → close.
-[ ] → braces with Shift. Minus → _ with Shift. * (T/G/Y/H) = close flags. Parens: Shift+9/0 on base.
+[ ] → braces with Shift. Bksp → ; / : . Minus → _ with Shift. * (T/G/Y/H) = close flags. Parens: Shift+9/0 on base.
 </pre>
 
 </div>
@@ -230,7 +230,8 @@ Other Raise-like symbols: base Shift+digit / Home layer.
 | Steno `(` / `)` | **Shift+9** / **Shift+0** |
 | Steno Backspace / Tab | **Bksp** / **Tab** → PW-FP / TA\*B |
 | Steno OS shortcuts | Hold **Ctrl / Cmd / Alt** → temporary QWERTY + that mod |
-| Steno Home symbols | Hold **Home** — Gemini strokes (`[]{}=+\|-_\`'"` etc.) |
+| Steno Home symbols | Hold **Home** — Gemini strokes (`[]{};:\|-_\`'"` etc.) |
+| Steno `;` / `:` | **Home + Bksp** / **Home + Shift + Bksp** |
 | Steno `-` / `_` | **Home + Minus** / **Home + Shift + Minus** |
 | Steno F-keys | Hold **End** |
 | Bootloader | **Lower + R** (left) or **Raise + Del** (right) |

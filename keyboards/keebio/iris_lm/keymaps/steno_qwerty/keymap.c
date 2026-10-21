@@ -31,7 +31,7 @@ enum custom_keycodes {
     ST_TAB,                // TA*B   tab
     // On QWERTY Lower: HID. On steno Home: Gemini (Emily / Lapwing).
     SYM_PIPE, // | ; Shift → backslash
-    SYM_EQL,  // = ; Shift → +
+    SYM_EQL,  // = ; Shift → + (QWERTY Lower only)
     // Steno Home only — always Gemini strokes (not HID).
     SYM_QUOT, // ' / KR-RG; Shift → " / KW-GS; with * → KR*RG / KW*GS
     SYM_GRV,  // grave / KH-FG; Shift → ~ (Emily); with * → KH*FG
@@ -39,6 +39,7 @@ enum custom_keycodes {
     SYM_LBRC, // [ / PWR-BGT; Shift → { / TPR-BGT
     SYM_RBRC, // ] / PWR*BGT; Shift → } / TPR*BGT
     SYM_MINS, // - / H-PB; Shift → _ / Emily BG
+    SYM_SCLN, // ; / #TPH*FPLT; Shift → : / #TPH-FPLT
 };
 
 enum combos {
@@ -214,6 +215,8 @@ static const uint16_t stroke_lcbr[]      = {STN_TL, STN_PL, STN_RL, STN_BR, STN_
 static const uint16_t stroke_rbrc[]      = {STN_PL, STN_WL, STN_RL, STN_ST1, STN_BR, STN_GR, STN_TR}; // PWR*BGT ]
 static const uint16_t stroke_rcbr[]      = {STN_TL, STN_PL, STN_RL, STN_ST1, STN_BR, STN_GR, STN_TR}; // TPR*BGT }
 static const uint16_t stroke_hyphen[]    = {STN_HL, STN_PR, STN_BR};                             // H-PB -
+static const uint16_t stroke_scln[]      = {STN_S1, STN_TL, STN_PL, STN_HL, STN_ST1, STN_FR, STN_PR, STN_LR, STN_TR}; // #TPH*FPLT ;
+static const uint16_t stroke_coln[]      = {STN_S1, STN_TL, STN_PL, STN_HL, STN_FR, STN_PR, STN_LR, STN_TR};         // #TPH-FPLT :
 
 // How many SYM_STAR keys (*1–*4) are held on the Home layer.
 static uint8_t sym_star_held = 0;
@@ -233,8 +236,6 @@ static const uint16_t emily_amp[]  = {STN_FR, STN_BR, STN_GR};                  
 static const uint16_t emily_ast[]  = {STN_LR};                                         // L
 static const uint16_t emily_lt[]   = {STN_FR, STN_PR, STN_LR};                         // FPL (+U)
 static const uint16_t emily_gt[]   = {STN_RR, STN_BR, STN_GR};                         // RBG (+U)
-static const uint16_t emily_eql[]  = {STN_PR, STN_BR, STN_LR, STN_GR};                 // PBLG =
-static const uint16_t emily_plus[] = {STN_GR};                                         // G +
 static const uint16_t emily_pipe[] = {STN_PR, STN_BR};                                 // PB |
 static const uint16_t emily_bsls[] = {STN_FR, STN_BR};                                 // FB backslash
 static const uint16_t emily_unds[] = {STN_BR, STN_GR};                                 // BG _
@@ -477,29 +478,21 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             }
             return false;
         case SYM_EQL:
-            // QWERTY Lower: HID =/+ . Steno Home: Emily PBLG / G.
+            // QWERTY Lower only: HID = / +.
             if (record->event.pressed) {
-                if (IS_LAYER_ON(_SYM_HOME)) {
-                    if (sym_shifted()) {
-                        send_emily_symbol(emily_plus, ARRAY_SIZE(emily_plus), false);
-                    } else {
-                        send_emily_symbol(emily_eql, ARRAY_SIZE(emily_eql), false);
+                const uint8_t mods    = get_mods();
+                const uint8_t oneshot = get_oneshot_mods();
+                if (sym_shifted()) {
+                    if (mods & MOD_MASK_SHIFT) {
+                        del_mods(mods & MOD_MASK_SHIFT);
                     }
+                    if (oneshot & MOD_MASK_SHIFT) {
+                        del_oneshot_mods(oneshot & MOD_MASK_SHIFT);
+                    }
+                    tap_code16(KC_PLUS);
+                    set_mods(mods);
                 } else {
-                    const uint8_t mods    = get_mods();
-                    const uint8_t oneshot = get_oneshot_mods();
-                    if (sym_shifted()) {
-                        if (mods & MOD_MASK_SHIFT) {
-                            del_mods(mods & MOD_MASK_SHIFT);
-                        }
-                        if (oneshot & MOD_MASK_SHIFT) {
-                            del_oneshot_mods(oneshot & MOD_MASK_SHIFT);
-                        }
-                        tap_code16(KC_PLUS);
-                        set_mods(mods);
-                    } else {
-                        tap_code(KC_EQL);
-                    }
+                    tap_code(KC_EQL);
                 }
             }
             return false;
@@ -564,6 +557,16 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                     send_emily_symbol(emily_unds, ARRAY_SIZE(emily_unds), false);
                 } else {
                     send_gemini_stroke(stroke_hyphen, ARRAY_SIZE(stroke_hyphen));
+                }
+            }
+            return false;
+        case SYM_SCLN:
+            // ; (#TPH*FPLT); Shift → : (#TPH-FPLT).
+            if (record->event.pressed) {
+                if (sym_shifted()) {
+                    send_gemini_stroke_unshifted(stroke_coln, ARRAY_SIZE(stroke_coln));
+                } else {
+                    send_gemini_stroke(stroke_scln, ARRAY_SIZE(stroke_scln));
                 }
             }
             return false;
@@ -757,8 +760,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     /* SYM_HOME — hold Home in steno. Symbols are Gemini (Lapwing/Emily), not HID.
      * !@#$%^&* unset (use Shift+digit on base). No dedicated ( ) — use Shift+9/0. */
     [_SYM_HOME] = LAYOUT(
-    // Esc: ` / ~ ; 9/0: [ ] / { } ; Bksp: = / +
-       SYM_GRV, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                            XXXXXXX, XXXXXXX, XXXXXXX, SYM_LBRC, SYM_RBRC, SYM_EQL,
+    // Esc: ` / ~ ; 9/0: [ ] / { } ; Bksp: ; / :
+       SYM_GRV, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                            XXXXXXX, XXXXXXX, XXXXXXX, SYM_LBRC, SYM_RBRC, SYM_SCLN,
     // * on T/Y ; Del: | / backslash
        XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, SYM_STAR,                           SYM_STAR, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, SYM_PIPE,
     // * on G/H ; Quote: ' / "

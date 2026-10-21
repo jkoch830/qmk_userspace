@@ -39,7 +39,7 @@ enum custom_keycodes {
     SYM_LBRC, // [ / PWR-BGT; Shift → { / TPR-BGT
     SYM_RBRC, // ] / PWR*BGT; Shift → } / TPR*BGT
     SYM_MINS, // - / H-PB; Shift → _ / Emily BG
-    SYM_SCLN, // ; / Emily RB; Shift → : / Emily LG (home-row ; position)
+    SYM_SCLN, // ; / #TPH*FPLT; Shift → : / #TPH-FPLT (home-row ; position)
 };
 
 enum combos {
@@ -215,6 +215,8 @@ static const uint16_t stroke_lcbr[]      = {STN_TL, STN_PL, STN_RL, STN_BR, STN_
 static const uint16_t stroke_rbrc[]      = {STN_PL, STN_WL, STN_RL, STN_ST1, STN_BR, STN_GR, STN_TR}; // PWR*BGT ]
 static const uint16_t stroke_rcbr[]      = {STN_TL, STN_PL, STN_RL, STN_ST1, STN_BR, STN_GR, STN_TR}; // TPR*BGT }
 static const uint16_t stroke_hyphen[]    = {STN_HL, STN_PR, STN_BR};                             // H-PB -
+static const uint16_t stroke_scln[]      = {STN_S1, STN_TL, STN_PL, STN_HL, STN_ST1, STN_FR, STN_PR, STN_LR, STN_TR}; // #TPH*FPLT ;
+static const uint16_t stroke_coln[]      = {STN_S1, STN_TL, STN_PL, STN_HL, STN_FR, STN_PR, STN_LR, STN_TR};         // #TPH-FPLT :
 
 // How many SYM_STAR keys (*1–*4) are held on the Home layer.
 static uint8_t sym_star_held = 0;
@@ -236,8 +238,6 @@ static const uint16_t emily_lt[]   = {STN_FR, STN_PR, STN_LR};                  
 static const uint16_t emily_gt[]   = {STN_RR, STN_BR, STN_GR};                         // RBG (+U)
 static const uint16_t emily_eql[]  = {STN_PR, STN_BR, STN_LR, STN_GR};                 // PBLG =
 static const uint16_t emily_plus[] = {STN_GR};                                         // G +
-static const uint16_t emily_scln[] = {STN_RR, STN_BR};                                 // RB ;
-static const uint16_t emily_coln[] = {STN_LR, STN_GR};                                 // LG :
 static const uint16_t emily_pipe[] = {STN_PR, STN_BR};                                 // PB |
 static const uint16_t emily_bsls[] = {STN_FR, STN_BR};                                 // FB backslash
 static const uint16_t emily_unds[] = {STN_BR, STN_GR};                                 // BG _
@@ -571,12 +571,12 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             }
             return false;
         case SYM_SCLN:
-            // ; (Emily RB); Shift → : (Emily LG). Home-row semicolon position.
+            // ; (#TPH*FPLT); Shift → : (#TPH-FPLT). Attach previous; space after.
             if (record->event.pressed) {
                 if (sym_shifted()) {
-                    send_emily_symbol(emily_coln, ARRAY_SIZE(emily_coln), false);
+                    send_gemini_stroke_unshifted(stroke_coln, ARRAY_SIZE(stroke_coln));
                 } else {
-                    send_emily_symbol(emily_scln, ARRAY_SIZE(emily_scln), false);
+                    send_gemini_stroke(stroke_scln, ARRAY_SIZE(stroke_scln));
                 }
             }
             return false;

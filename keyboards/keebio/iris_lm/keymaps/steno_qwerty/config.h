@@ -5,8 +5,11 @@
 // Enable NKRO on every boot (modern QMK; replaces deprecated FORCE_NKRO).
 #define NKRO_DEFAULT_ON true
 
-// Five-key chord needs a slightly longer window than the default 50ms.
-#define COMBO_TERM 200
+// Letter chords only arm while Cmd is already held (see combo_should_trigger),
+// so WASD/QWER are not buffered during normal typing. 80ms is enough for the
+// four letter keys once Cmd is down.
+#define COMBO_TERM 80
+#define COMBO_SHOULD_TRIGGER
 
 // Prefer GeminiPR even if EEPROM previously stored another protocol.
 #define STENO_DEFAULT_MODE STENO_MODE_GEMINI

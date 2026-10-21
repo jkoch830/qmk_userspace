@@ -2,8 +2,9 @@
 
 Visual reference for the current binds. Blank cells are transparent (`_______`) and fall through to the layer below.
 
-**Modes:** QWERTY (default) ↔ Steno via **Cmd + A + S + D + F**; ↔ Game via **Cmd + Q + W + E + R**.  
+**Modes:** QWERTY (default) ↔ Steno via **hold Cmd, then A+S+D+F**; ↔ Game via **hold Cmd, then Q+W+E+R**.  
 Each chord toggles that mode ↔ QWERTY; you can also jump Game↔Steno with the destination chord.  
+(Cmd must be down first so letter keys are not combo-buffered during normal typing / WASD.)  
 **RGB:** Bksp orange = QWERTY; Bksp+`0` = Steno; Bksp+`0`+`9` = Game. **Upper + Tab** toggles indicators fully off/on.
 
 ---
@@ -36,7 +37,7 @@ Each chord toggles that mode ↔ QWERTY; you can also jump Game↔Steno with the
 
 Same letters as QWERTY; thumbs become **Space, Lower, Upper, Enter** (was Lower, Enter, Space, Upper).
 
-Toggle: hold **Cmd + Q + W + E + R** together (works from QWERTY, Steno, or Game).
+Toggle: hold **Cmd**, then chord **Q + W + E + R** (works from QWERTY, Steno, or Game).
 
 <div style="background:#ffe0b2;padding:1rem 1.25rem 1.5rem;border-radius:8px;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13px;line-height:1.35;overflow-x:auto">
 
@@ -120,7 +121,7 @@ On Game, Upper is the inner-right thumb (was Space).
 
 Default-layer swap (not a momentary layer). Same physical board; steno keys talk to Plover.
 
-Toggle: hold **Cmd + A + S + D + F** together (works from QWERTY, Game, or Steno).
+Toggle: hold **Cmd**, then chord **A + S + D + F** (works from QWERTY, Game, or Steno).
 
 <div style="background:#c8e6c9;padding:1rem 1.25rem 1.5rem;border-radius:8px;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13px;line-height:1.35;overflow-x:auto">
 
@@ -165,7 +166,7 @@ Unshifted 9/0 still type digits. Other letter keys (Z X C V B / N M , . /) stay 
 | Steno Backspace / Tab | **Bksp** / **Tab** → PW-FP / TA\*B |
 | Bootloader | **Lower + R** (left) or **Raise + Del** (right) |
 | Clear EEPROM | **Lower + Z** or **Raise + RShift** |
-| Toggle Steno ↔ QWERTY | **Cmd + A + S + D + F** (also enters Steno from Game) |
-| Toggle Game ↔ QWERTY | **Cmd + Q + W + E + R** (also enters Game from Steno) |
+| Toggle Steno ↔ QWERTY | Hold **Cmd**, then **A+S+D+F** (also enters Steno from Game) |
+| Toggle Game ↔ QWERTY | Hold **Cmd**, then **Q+W+E+R** (also enters Game from Steno) |
 
 **Tri-layer:** Holding Lower **and** Upper together activates a transparent Adjust layer (union of Lower/Raise only).

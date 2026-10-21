@@ -2,8 +2,8 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 //
 // Iris LM: QWERTY-first with toggled Lapwing/steno and Game modes.
-// Steno toggle: chord Left GUI (Cmd) + A + S + D + F simultaneously.
-// Game toggle:  chord Left GUI (Cmd) + Q + W + E + R simultaneously.
+// Steno toggle: hold Cmd, then chord A + S + D + F.
+// Game toggle:  hold Cmd, then chord Q + W + E + R.
 // Steno keys speak GeminiPR to Plover; unlisted keys stay QWERTY.
 // Game mode is QWERTY with Space/Lower/Upper/Enter thumb order.
 
@@ -35,16 +35,19 @@ enum combos {
     COMBO_GAME_TOGGLE_STENO,
 };
 
-const uint16_t PROGMEM steno_toggle_qwerty[] = {KC_LGUI, KC_A, KC_S, KC_D, KC_F, COMBO_END};
+// Cmd is NOT in these arrays on purpose. QMK buffers every combo member for
+// COMBO_TERM; putting A/S/D/F/Q/W/E/R in combos made WASD lag ~200ms in games.
+// Hold Cmd first (registers as a normal mod), then chord the letters.
+const uint16_t PROGMEM steno_toggle_qwerty[] = {KC_A, KC_S, KC_D, KC_F, COMBO_END};
 
 // Exit while STN_* keycodes are active (Lapwing: A=S2, S=K, D=W, F=R).
-const uint16_t PROGMEM steno_toggle_steno[] = {KC_LGUI, STN_S2, STN_KL, STN_WL, STN_RL, COMBO_END};
+const uint16_t PROGMEM steno_toggle_steno[] = {STN_S2, STN_KL, STN_WL, STN_RL, COMBO_END};
 
 // Game chord works on QWERTY and Game (same letter keycodes).
-const uint16_t PROGMEM game_toggle_qwerty[] = {KC_LGUI, KC_Q, KC_W, KC_E, KC_R, COMBO_END};
+const uint16_t PROGMEM game_toggle_qwerty[] = {KC_Q, KC_W, KC_E, KC_R, COMBO_END};
 
 // From Steno: Q=#/S1, W=T-, E=P-, R=H- (all STN_* — mixed HID+STN combos are unreliable).
-const uint16_t PROGMEM game_toggle_steno[] = {KC_LGUI, STN_S1, STN_TL, STN_PL, STN_HL, COMBO_END};
+const uint16_t PROGMEM game_toggle_steno[] = {STN_S1, STN_TL, STN_PL, STN_HL, COMBO_END};
 
 combo_t key_combos[] = {
     [COMBO_STENO_TOGGLE_QWERTY] = COMBO_ACTION(steno_toggle_qwerty),
@@ -53,9 +56,12 @@ combo_t key_combos[] = {
     [COMBO_GAME_TOGGLE_STENO]   = COMBO_ACTION(game_toggle_steno),
 };
 
-// Only the keycode set that matches the current base may fire. Steno keys never
-// match the QWERTY combos and vice versa; gating avoids cross-talk.
+// Arm letter combos only while Cmd is held, and only for the active base's
+// keycode set. Without Cmd, WASD/QWER are normal keys (no combo buffering).
 bool combo_should_trigger(uint16_t combo_index, combo_t *combo, uint16_t keycode, keyrecord_t *record) {
+    if (!((get_mods() | get_oneshot_mods()) & MOD_BIT(KC_LGUI))) {
+        return false;
+    }
     const bool in_steno = layer_state_cmp(default_layer_state, _STENO);
     switch (combo_index) {
         case COMBO_STENO_TOGGLE_STENO:
